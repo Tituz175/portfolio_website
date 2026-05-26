@@ -1547,24 +1547,79 @@ function Footer() {
 // ─── App ───────────────────────────────────────────────────────────────────────
 
 export default function App() {
-  const [isDark, setIsDark] = useState(false);
+  const [isDark, setIsDark] = useState(() => {
+    // Check saved preference first
+    const savedTheme = localStorage.getItem("theme");
+
+    if (savedTheme === "dark") return true;
+    if (savedTheme === "light") return false;
+
+    // Otherwise use system preference
+    return window.matchMedia("(prefers-color-scheme: dark)").matches;
+  });
+
   const [activeSection, setActiveSection] = useState("hero");
 
   const t = isDark ? DARK : LIGHT;
-  const toggle = () => setIsDark((d) => !d);
+
+  const toggle = () => {
+    setIsDark((prev) => {
+      const next = !prev;
+
+      // Save preference
+      localStorage.setItem("theme", next ? "dark" : "light");
+
+      return next;
+    });
+  };
+
+  // Listen for system theme changes ONLY if user
+  // has not manually selected a theme
+  useEffect(() => {
+    const media = window.matchMedia("(prefers-color-scheme: dark)");
+
+    const handleChange = (e: MediaQueryListEvent) => {
+      const savedTheme = localStorage.getItem("theme");
+
+      // Ignore system changes if user already chose manually
+      if (savedTheme) return;
+
+      setIsDark(e.matches);
+    };
+
+    media.addEventListener("change", handleChange);
+
+    return () => {
+      media.removeEventListener("change", handleChange);
+    };
+  }, []);
 
   useEffect(() => {
-    const ids = ["hero", "about", "projects", "research", "skills", "experience", "blog", "contact"];
+    const ids = [
+      "hero",
+      "about",
+      "projects",
+      "research",
+      "skills",
+      "experience",
+      "blog",
+      "contact",
+    ];
+
     const observer = new IntersectionObserver(
       (entries) => {
-        entries.forEach((e) => { if (e.isIntersecting) setActiveSection(e.target.id); });
+        entries.forEach((e) => {
+          if (e.isIntersecting) setActiveSection(e.target.id);
+        });
       },
       { rootMargin: "-40% 0px -55% 0px", threshold: 0 }
     );
+
     ids.forEach((id) => {
       const el = document.getElementById(id);
       if (el) observer.observe(el);
     });
+
     return () => observer.disconnect();
   }, []);
 
@@ -1579,6 +1634,7 @@ export default function App() {
         }}
       >
         <Navbar active={activeSection} />
+
         <main>
           <Hero />
           <About />
@@ -1589,6 +1645,7 @@ export default function App() {
           <Blog />
           <Contact />
         </main>
+
         <Footer />
       </div>
     </ThemeCtx.Provider>
