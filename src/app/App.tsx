@@ -1547,7 +1547,7 @@ function Footer() {
 // ─── App ───────────────────────────────────────────────────────────────────────
 
 export default function App() {
-  const [isDark, setIsDark] = useState(true);
+  const [isDark, setIsDark] = useState(false);
   const [activeSection, setActiveSection] = useState("hero");
 
   const t = isDark ? DARK : LIGHT;
