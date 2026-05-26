@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, createContext, useContext } from "react";
 import { motion } from "motion/react";
 import {
   Github,
@@ -23,7 +23,102 @@ import {
   FileText,
   Star,
   ChevronRight,
+  Sun,
+  Moon,
 } from "lucide-react";
+
+// ─── Theme system ──────────────────────────────────────────────────────────────
+
+interface Tok {
+  bg: string;
+  text: string;
+  textSub: string;
+  textMuted: string;
+  textFaint: string;
+  textVeryFaint: string;
+  textDim: string;
+  card: string;
+  cardHover: string;
+  border: string;
+  borderHover: string;
+  borderStrong: string;
+  tagBg: string;
+  tagBorder: string;
+  tagBorderHover: string;
+  navBg: string;
+  navBorder: string;
+  mobileBg: string;
+  gridOpacity: number;
+  orb1: string;
+  orb2: string;
+  orb3: string;
+  heroGradient: string;
+  timelineRail: string;
+}
+
+const DARK: Tok = {
+  bg: "#08080e",
+  text: "#e8e8f2",
+  textSub: "rgba(232,232,242,0.72)",
+  textMuted: "rgba(232,232,242,0.50)",
+  textFaint: "rgba(232,232,242,0.36)",
+  textVeryFaint: "rgba(232,232,242,0.22)",
+  textDim: "rgba(232,232,242,0.15)",
+  card: "rgba(255,255,255,0.018)",
+  cardHover: "rgba(255,255,255,0.036)",
+  border: "rgba(255,255,255,0.06)",
+  borderHover: "rgba(255,255,255,0.12)",
+  borderStrong: "rgba(255,255,255,0.22)",
+  tagBg: "rgba(255,255,255,0.04)",
+  tagBorder: "rgba(255,255,255,0.05)",
+  tagBorderHover: "rgba(255,255,255,0.13)",
+  navBg: "rgba(8,8,14,0.86)",
+  navBorder: "rgba(255,255,255,0.06)",
+  mobileBg: "rgba(8,8,14,0.97)",
+  gridOpacity: 0.028,
+  orb1: "rgba(64,128,255,0.18)",
+  orb2: "rgba(124,92,252,0.14)",
+  orb3: "rgba(6,182,212,0.10)",
+  heroGradient: "linear-gradient(135deg,#ffffff 0%,#b0ccff 45%,#c4aeff 100%)",
+  timelineRail: "linear-gradient(to bottom,rgba(64,128,255,0.5),rgba(255,255,255,0.06) 60%,transparent)",
+};
+
+const LIGHT: Tok = {
+  bg: "#f4f4f9",
+  text: "#0d0d1a",
+  textSub: "rgba(13,13,26,0.72)",
+  textMuted: "rgba(13,13,26,0.54)",
+  textFaint: "rgba(13,13,26,0.38)",
+  textVeryFaint: "rgba(13,13,26,0.26)",
+  textDim: "rgba(13,13,26,0.18)",
+  card: "rgba(255,255,255,0.72)",
+  cardHover: "rgba(255,255,255,0.92)",
+  border: "rgba(0,0,0,0.08)",
+  borderHover: "rgba(0,0,0,0.17)",
+  borderStrong: "rgba(0,0,0,0.26)",
+  tagBg: "rgba(0,0,0,0.04)",
+  tagBorder: "rgba(0,0,0,0.07)",
+  tagBorderHover: "rgba(0,0,0,0.18)",
+  navBg: "rgba(244,244,249,0.88)",
+  navBorder: "rgba(0,0,0,0.07)",
+  mobileBg: "rgba(244,244,249,0.98)",
+  gridOpacity: 0.055,
+  orb1: "rgba(64,128,255,0.13)",
+  orb2: "rgba(124,92,252,0.10)",
+  orb3: "rgba(6,182,212,0.08)",
+  heroGradient: "linear-gradient(135deg,#0d0d1a 0%,#1a3e9a 52%,#5533c0 100%)",
+  timelineRail: "linear-gradient(to bottom,rgba(64,128,255,0.45),rgba(0,0,0,0.06) 60%,transparent)",
+};
+
+const ThemeCtx = createContext<{ t: Tok; isDark: boolean; toggle: () => void }>({
+  t: DARK,
+  isDark: true,
+  toggle: () => {},
+});
+
+function useTheme() {
+  return useContext(ThemeCtx);
+}
 
 // ─── Motion helpers ────────────────────────────────────────────────────────────
 
@@ -37,10 +132,7 @@ const fadeUp = {
 };
 
 function stagger(i: number) {
-  return {
-    ...fadeUp,
-    transition: { duration: 0.65, ease, delay: i * 0.09 },
-  };
+  return { ...fadeUp, transition: { duration: 0.65, ease, delay: i * 0.09 } };
 }
 
 function heroAnim(delay: number) {
@@ -276,13 +368,57 @@ const POSTS = [
   },
 ];
 
-// ─── Subcomponents ─────────────────────────────────────────────────────────────
+// ─── Shared helpers ────────────────────────────────────────────────────────────
 
 function scrollTo(id: string) {
   document.querySelector(id)?.scrollIntoView({ behavior: "smooth" });
 }
 
+function ThemeToggle() {
+  const { t, isDark, toggle } = useTheme();
+  return (
+    <button
+      onClick={toggle}
+      aria-label={isDark ? "Switch to light theme" : "Switch to dark theme"}
+      className="flex items-center justify-center w-8 h-8 rounded-full border transition-all duration-200"
+      style={{
+        borderColor: t.border,
+        backgroundColor: t.tagBg,
+        color: t.textMuted,
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.borderColor = t.borderHover;
+        e.currentTarget.style.color = t.text;
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.borderColor = t.border;
+        e.currentTarget.style.color = t.textMuted;
+      }}
+    >
+      {isDark ? <Sun size={14} /> : <Moon size={14} />}
+    </button>
+  );
+}
+
+function SectionLabel({ index, label, color }: { index: string; label: string; color: string }) {
+  const { t } = useTheme();
+  return (
+    <div className="flex items-center gap-3 mb-4">
+      <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.7rem", color, letterSpacing: "0.18em" }}>
+        {index}
+      </span>
+      <div className="h-px w-8" style={{ backgroundColor: color, opacity: 0.4 }} />
+      <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.65rem", letterSpacing: "0.2em", color: t.textVeryFaint }}>
+        {label.toUpperCase()}
+      </span>
+    </div>
+  );
+}
+
+// ─── Navbar ────────────────────────────────────────────────────────────────────
+
 function Navbar({ active }: { active: string }) {
+  const { t } = useTheme();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -300,65 +436,89 @@ function Navbar({ active }: { active: string }) {
 
   return (
     <header
-      className={`fixed top-0 inset-x-0 z-50 transition-all duration-500 ${
-        scrolled
-          ? "py-3 backdrop-blur-2xl border-b"
-          : "py-5"
-      }`}
+      className="fixed top-0 inset-x-0 z-50 transition-all duration-500"
       style={{
-        backgroundColor: scrolled ? "rgba(8,8,14,0.85)" : "transparent",
-        borderBottomColor: scrolled ? "rgba(255,255,255,0.06)" : "transparent",
+        padding: scrolled ? "12px 0" : "20px 0",
+        backgroundColor: scrolled ? t.navBg : "transparent",
+        borderBottom: scrolled ? `1px solid ${t.navBorder}` : "1px solid transparent",
+        backdropFilter: scrolled ? "blur(24px)" : "none",
       }}
     >
       <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
+        {/* Logo */}
         <a
           href="#hero"
           onClick={(e) => handleNav(e, "#hero")}
-          className="text-sm text-white/60 tracking-[0.25em] uppercase hover:text-white transition-colors"
-          style={{ fontFamily: "var(--font-mono)" }}
+          className="text-sm tracking-[0.25em] uppercase transition-colors duration-200"
+          style={{ fontFamily: "var(--font-mono)", color: t.textMuted }}
+          onMouseEnter={(e) => (e.currentTarget.style.color = t.text)}
+          onMouseLeave={(e) => (e.currentTarget.style.color = t.textMuted)}
         >
           T<span style={{ color: "#4080ff" }}>.</span>O
         </a>
 
+        {/* Desktop nav */}
         <nav className="hidden md:flex items-center gap-7">
           {NAV_LINKS.map(({ label, href }) => (
             <a
               key={label}
               href={href}
               onClick={(e) => handleNav(e, href)}
-              className={`text-sm transition-colors hover:text-white ${
-                active === href.slice(1) ? "text-white" : "text-white/40"
-              }`}
+              className="text-sm transition-colors duration-200"
+              style={{ color: active === href.slice(1) ? t.text : t.textFaint }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = t.text)}
+              onMouseLeave={(e) => (e.currentTarget.style.color = active === href.slice(1) ? t.text : t.textFaint)}
             >
               {label}
             </a>
           ))}
         </nav>
 
-        <a
-          href="#contact"
-          onClick={(e) => handleNav(e, "#contact")}
-          className="hidden md:flex items-center gap-2 text-sm px-4 py-2 rounded-full border text-white/60 hover:text-white transition-all"
-          style={{ borderColor: "rgba(255,255,255,0.1)" }}
-          onMouseEnter={(e) => (e.currentTarget.style.borderColor = "rgba(64,128,255,0.5)")}
-          onMouseLeave={(e) => (e.currentTarget.style.borderColor = "rgba(255,255,255,0.1)")}
-        >
-          Get in touch <ChevronRight size={14} />
-        </a>
+        <div className="hidden md:flex items-center gap-3">
+          <ThemeToggle />
+          <a
+            href="#contact"
+            onClick={(e) => handleNav(e, "#contact")}
+            className="flex items-center gap-2 text-sm px-4 py-2 rounded-full border transition-all duration-200"
+            style={{ borderColor: t.border, color: t.textMuted }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = "rgba(64,128,255,0.5)";
+              e.currentTarget.style.color = t.text;
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = t.border;
+              e.currentTarget.style.color = t.textMuted;
+            }}
+          >
+            Get in touch <ChevronRight size={14} />
+          </a>
+        </div>
 
-        <button
-          className="md:hidden text-white/50 hover:text-white transition-colors"
-          onClick={() => setOpen(!open)}
-          aria-label="Toggle menu"
-        >
-          {open ? <X size={20} /> : <Menu size={20} />}
-        </button>
+        {/* Mobile controls */}
+        <div className="md:hidden flex items-center gap-3">
+          <ThemeToggle />
+          <button
+            className="transition-colors duration-200"
+            style={{ color: t.textFaint }}
+            onClick={() => setOpen(!open)}
+            aria-label="Toggle menu"
+            onMouseEnter={(e) => (e.currentTarget.style.color = t.text)}
+            onMouseLeave={(e) => (e.currentTarget.style.color = t.textFaint)}
+          >
+            {open ? <X size={20} /> : <Menu size={20} />}
+          </button>
+        </div>
       </div>
 
+      {/* Mobile drawer */}
       {open && (
         <div
-          className="md:hidden absolute top-full inset-x-0 backdrop-blur-2xl border-b py-6 px-6"
-          style={{ backgroundColor: "rgba(8,8,14,0.97)", borderBottomColor: "rgba(255,255,255,0.06)" }}
+          className="md:hidden absolute top-full inset-x-0 py-6 px-6 border-b"
+          style={{
+            backgroundColor: t.mobileBg,
+            backdropFilter: "blur(24px)",
+            borderBottomColor: t.navBorder,
+          }}
         >
           <nav className="flex flex-col gap-4">
             {NAV_LINKS.map(({ label, href }) => (
@@ -366,7 +526,10 @@ function Navbar({ active }: { active: string }) {
                 key={label}
                 href={href}
                 onClick={(e) => handleNav(e, href)}
-                className="text-white/50 hover:text-white transition-colors py-1"
+                className="py-1 transition-colors duration-200"
+                style={{ color: t.textMuted }}
+                onMouseEnter={(e) => (e.currentTarget.style.color = t.text)}
+                onMouseLeave={(e) => (e.currentTarget.style.color = t.textMuted)}
               >
                 {label}
               </a>
@@ -378,58 +541,48 @@ function Navbar({ active }: { active: string }) {
   );
 }
 
+// ─── Hero ──────────────────────────────────────────────────────────────────────
+
 function HeroBg() {
+  const { t } = useTheme();
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none select-none">
-      {/* Orbs */}
       <div
         className="absolute rounded-full"
         style={{
-          width: 900,
-          height: 900,
-          top: "-25%",
-          left: "-20%",
-          background: "radial-gradient(circle, rgba(64,128,255,0.18) 0%, transparent 65%)",
+          width: 900, height: 900, top: "-25%", left: "-20%",
+          background: `radial-gradient(circle, ${t.orb1} 0%, transparent 65%)`,
           filter: "blur(40px)",
         }}
       />
       <div
         className="absolute rounded-full"
         style={{
-          width: 700,
-          height: 700,
-          top: "5%",
-          right: "-15%",
-          background: "radial-gradient(circle, rgba(124,92,252,0.14) 0%, transparent 65%)",
+          width: 700, height: 700, top: "5%", right: "-15%",
+          background: `radial-gradient(circle, ${t.orb2} 0%, transparent 65%)`,
           filter: "blur(40px)",
         }}
       />
       <div
         className="absolute rounded-full"
         style={{
-          width: 500,
-          height: 500,
-          bottom: "5%",
-          left: "30%",
-          background: "radial-gradient(circle, rgba(6,182,212,0.10) 0%, transparent 65%)",
+          width: 500, height: 500, bottom: "5%", left: "30%",
+          background: `radial-gradient(circle, ${t.orb3} 0%, transparent 65%)`,
           filter: "blur(40px)",
         }}
       />
-      {/* Grid */}
-      <svg className="absolute inset-0 w-full h-full" style={{ opacity: 0.028 }}>
+      <svg className="absolute inset-0 w-full h-full" style={{ opacity: t.gridOpacity }}>
         <defs>
           <pattern id="pg" width="64" height="64" patternUnits="userSpaceOnUse">
-            <path d="M 64 0 L 0 0 0 64" fill="none" stroke="white" strokeWidth="0.6" />
+            <path d="M 64 0 L 0 0 0 64" fill="none" stroke="currentColor" strokeWidth="0.6" />
           </pattern>
         </defs>
         <rect width="100%" height="100%" fill="url(#pg)" />
       </svg>
-      {/* Radial fade at edges */}
       <div
         className="absolute inset-0"
         style={{
-          background:
-            "radial-gradient(ellipse 80% 60% at 50% 0%, transparent 40%, #08080e 100%)",
+          background: `radial-gradient(ellipse 80% 60% at 50% 0%, transparent 40%, ${t.bg} 100%)`,
         }}
       />
     </div>
@@ -437,22 +590,22 @@ function HeroBg() {
 }
 
 function Hero() {
+  const { t } = useTheme();
   return (
     <section
       id="hero"
       className="relative min-h-screen flex flex-col items-center justify-center text-center px-6 pt-24 pb-16 overflow-hidden"
     >
       <HeroBg />
-
       <div className="relative z-10 max-w-5xl mx-auto w-full">
         {/* Badge */}
-        <motion.div
+        {/* <motion.div
           {...heroAnim(0.1)}
           className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full border mb-10 text-xs"
           style={{
             borderColor: "rgba(64,128,255,0.3)",
-            backgroundColor: "rgba(64,128,255,0.06)",
-            color: "#7aa8ff",
+            backgroundColor: "rgba(64,128,255,0.07)",
+            color: "#6ea8ff",
             fontFamily: "var(--font-mono)",
             letterSpacing: "0.08em",
           }}
@@ -462,7 +615,7 @@ function Hero() {
             style={{ backgroundColor: "#4080ff", boxShadow: "0 0 8px #4080ff" }}
           />
           Incoming PhD Student · University of Delaware · Fall 2025
-        </motion.div>
+        </motion.div> */}
 
         {/* Name */}
         <motion.h1
@@ -473,11 +626,11 @@ function Hero() {
             fontSize: "clamp(4rem, 14vw, 11rem)",
           }}
         >
-          <span className="text-white">Tobi</span>
+          <span style={{ color: t.text }}>Tobi</span>
           <br />
           <span
             style={{
-              backgroundImage: "linear-gradient(135deg, #ffffff 0%, #b0ccff 45%, #c4aeff 100%)",
+              backgroundImage: t.heroGradient,
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
               backgroundClip: "text",
@@ -490,11 +643,12 @@ function Hero() {
         {/* Subtitle */}
         <motion.p
           {...heroAnim(0.32)}
-          className="text-white/40 mb-6 tracking-widest uppercase"
+          className="mb-6 tracking-widest uppercase"
           style={{
             fontFamily: "var(--font-mono)",
             fontSize: "clamp(0.65rem, 1.5vw, 0.8rem)",
             letterSpacing: "0.22em",
+            color: t.textFaint,
           }}
         >
           AI Engineer&nbsp;&nbsp;·&nbsp;&nbsp;Machine Learning Researcher&nbsp;&nbsp;·&nbsp;&nbsp;Software Developer
@@ -503,7 +657,8 @@ function Hero() {
         {/* Bio */}
         <motion.p
           {...heroAnim(0.44)}
-          className="text-white/55 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed mb-12"
+          className="text-lg md:text-xl max-w-2xl mx-auto leading-relaxed mb-12"
+          style={{ color: t.textMuted }}
         >
           Building intelligent systems at the frontier of AI — from neural architectures
           and agentic pipelines to production NLP infrastructure and rigorous model evaluation.
@@ -516,45 +671,52 @@ function Hero() {
         >
           <button
             onClick={() => scrollTo("#projects")}
-            className="flex items-center gap-2 px-6 py-3 rounded-full font-medium text-white transition-all"
-            style={{
-              backgroundColor: "#4080ff",
-              boxShadow: "0 0 0 rgba(64,128,255,0)",
-            }}
+            className="flex items-center gap-2 px-6 py-3 rounded-full font-medium text-white transition-all duration-200"
+            style={{ backgroundColor: "#4080ff" }}
             onMouseEnter={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.backgroundColor = "#5590ff";
-              (e.currentTarget as HTMLButtonElement).style.boxShadow = "0 0 28px rgba(64,128,255,0.4)";
+              e.currentTarget.style.backgroundColor = "#5592ff";
+              e.currentTarget.style.boxShadow = "0 0 28px rgba(64,128,255,0.4)";
             }}
             onMouseLeave={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.backgroundColor = "#4080ff";
-              (e.currentTarget as HTMLButtonElement).style.boxShadow = "0 0 0 rgba(64,128,255,0)";
+              e.currentTarget.style.backgroundColor = "#4080ff";
+              e.currentTarget.style.boxShadow = "none";
             }}
           >
             View Projects <ArrowUpRight size={16} />
           </button>
-
           <a
             href="/cv.pdf"
-            className="flex items-center gap-2 px-6 py-3 rounded-full border text-white/60 hover:text-white transition-all"
-            style={{ borderColor: "rgba(255,255,255,0.12)" }}
-            onMouseEnter={(e) => (e.currentTarget.style.borderColor = "rgba(255,255,255,0.28)")}
-            onMouseLeave={(e) => (e.currentTarget.style.borderColor = "rgba(255,255,255,0.12)")}
+            className="flex items-center gap-2 px-6 py-3 rounded-full border transition-all duration-200"
+            style={{ borderColor: t.border, color: t.textMuted }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = t.borderHover;
+              e.currentTarget.style.color = t.text;
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = t.border;
+              e.currentTarget.style.color = t.textMuted;
+            }}
           >
             <Download size={16} /> Download CV
           </a>
-
           <button
             onClick={() => scrollTo("#contact")}
-            className="flex items-center gap-2 px-6 py-3 rounded-full border text-white/60 hover:text-white transition-all"
-            style={{ borderColor: "rgba(255,255,255,0.12)" }}
-            onMouseEnter={(e) => (e.currentTarget.style.borderColor = "rgba(255,255,255,0.28)")}
-            onMouseLeave={(e) => (e.currentTarget.style.borderColor = "rgba(255,255,255,0.12)")}
+            className="flex items-center gap-2 px-6 py-3 rounded-full border transition-all duration-200"
+            style={{ borderColor: t.border, color: t.textMuted }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = t.borderHover;
+              e.currentTarget.style.color = t.text;
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = t.border;
+              e.currentTarget.style.color = t.textMuted;
+            }}
           >
             <Mail size={16} /> Contact Me
           </button>
         </motion.div>
 
-        {/* Social icons */}
+        {/* Socials */}
         <motion.div {...heroAnim(0.66)} className="flex items-center justify-center gap-4">
           {[
             { icon: Github, href: "https://github.com", label: "GitHub" },
@@ -567,14 +729,16 @@ function Hero() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label={label}
-              className="p-3 rounded-full border text-white/30 hover:text-white transition-all"
-              style={{ borderColor: "rgba(255,255,255,0.09)" }}
+              className="p-3 rounded-full border transition-all duration-200"
+              style={{ borderColor: t.border, color: t.textFaint, backgroundColor: "transparent" }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = "rgba(255,255,255,0.22)";
-                e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.04)";
+                e.currentTarget.style.borderColor = t.borderHover;
+                e.currentTarget.style.color = t.text;
+                e.currentTarget.style.backgroundColor = t.tagBg;
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = "rgba(255,255,255,0.09)";
+                e.currentTarget.style.borderColor = t.border;
+                e.currentTarget.style.color = t.textFaint;
                 e.currentTarget.style.backgroundColor = "transparent";
               }}
             >
@@ -590,45 +754,29 @@ function Hero() {
         animate={{ opacity: 1 }}
         transition={{ delay: 2.2, duration: 1 }}
         className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
-        style={{ color: "rgba(255,255,255,0.18)" }}
+        style={{ color: t.textVeryFaint }}
       >
-        <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.62rem", letterSpacing: "0.2em" }}>SCROLL</span>
+        <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.62rem", letterSpacing: "0.2em" }}>
+          SCROLL
+        </span>
         <div
           className="w-px h-10"
-          style={{ background: "linear-gradient(to bottom, rgba(255,255,255,0.2), transparent)" }}
+          style={{ background: `linear-gradient(to bottom, ${t.textVeryFaint}, transparent)` }}
         />
       </motion.div>
     </section>
   );
 }
 
-function SectionLabel({ index, label, color }: { index: string; label: string; color: string }) {
-  return (
-    <div className="flex items-center gap-3 mb-4">
-      <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.7rem", color, letterSpacing: "0.18em" }}>
-        {index}
-      </span>
-      <div className="h-px flex-1 max-w-8" style={{ backgroundColor: color, opacity: 0.4 }} />
-      <span
-        className="text-white/30 uppercase tracking-widest"
-        style={{ fontFamily: "var(--font-mono)", fontSize: "0.65rem", letterSpacing: "0.2em" }}
-      >
-        {label}
-      </span>
-    </div>
-  );
-}
+// ─── About ─────────────────────────────────────────────────────────────────────
 
 function About() {
+  const { t } = useTheme();
+
   const interests = [
-    "Large Language Models",
-    "Agentic AI Systems",
-    "NLP & Semantics",
-    "ML Evaluation",
-    "Neural Architectures",
-    "AI Safety",
-    "Information Retrieval",
-    "Multimodal Learning",
+    "Large Language Models", "Agentic AI Systems", "NLP & Semantics",
+    "ML Evaluation", "Neural Architectures", "AI Safety",
+    "Information Retrieval", "Multimodal Learning",
   ];
 
   const stats = [
@@ -644,8 +792,8 @@ function About() {
         <motion.div {...fadeUp} className="mb-16">
           <SectionLabel index="01" label="About" color="#4080ff" />
           <h2
-            className="text-5xl md:text-6xl font-black tracking-tight text-white"
-            style={{ fontFamily: "var(--font-display)" }}
+            className="text-5xl md:text-6xl font-black tracking-tight"
+            style={{ fontFamily: "var(--font-display)", color: t.text }}
           >
             Who I Am
           </h2>
@@ -653,32 +801,33 @@ function About() {
 
         <div className="grid md:grid-cols-[1fr_1fr] gap-16 lg:gap-28 items-start">
           <div className="space-y-5">
-            <motion.p {...stagger(0)} className="text-white/70 text-lg leading-relaxed">
+            <motion.p {...stagger(0)} className="text-lg leading-relaxed" style={{ color: t.textSub }}>
               {"I'm"} Tobi Oyekanmi — an AI engineer, machine learning researcher, and software
               developer with a deep focus on building intelligent systems that push the boundaries
               of modern AI.
             </motion.p>
-            <motion.p {...stagger(1)} className="text-white/55 leading-relaxed">
+            <motion.p {...stagger(1)} className="leading-relaxed" style={{ color: t.textMuted }}>
               My work lives at the intersection of research and engineering: I design
               production-grade ML systems while investigating the fundamental questions that drive
               AI forward — how we evaluate models rigorously, how we make LLMs reliable agents,
               and how we build language understanding that generalizes beyond benchmarks.
             </motion.p>
-            <motion.p {...stagger(2)} className="text-white/55 leading-relaxed">
+            <motion.p {...stagger(2)} className="leading-relaxed" style={{ color: t.textMuted }}>
               This Fall, {"I'll"} be joining the University of Delaware as an incoming PhD
               student in Computer Science, deepening my research in NLP and AI systems.
               I hold a BSc in Computer Science from New Mexico Highlands University.
             </motion.p>
 
             <motion.div {...stagger(3)} className="flex flex-wrap gap-5 pt-4">
-              <div className="flex items-center gap-2 text-white/40 text-sm">
-                <MapPin size={13} style={{ color: "#4080ff" }} />
-                Newark, DE (incoming)
-              </div>
-              <div className="flex items-center gap-2 text-white/40 text-sm">
-                <GraduationCap size={13} style={{ color: "#7c5cfc" }} />
-                PhD — University of Delaware
-              </div>
+              {[
+                { icon: MapPin, text: "Newark, DE (incoming)", color: "#4080ff" },
+                { icon: GraduationCap, text: "PhD — University of Delaware", color: "#7c5cfc" },
+              ].map(({ icon: Icon, text, color }) => (
+                <div key={text} className="flex items-center gap-2 text-sm" style={{ color: t.textFaint }}>
+                  <Icon size={13} style={{ color }} />
+                  {text}
+                </div>
+              ))}
             </motion.div>
 
             <motion.div {...stagger(4)} className="flex gap-3 pt-2">
@@ -693,10 +842,16 @@ function About() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={label}
-                  className="p-2.5 rounded-xl border text-white/30 hover:text-white transition-all"
-                  style={{ borderColor: "rgba(255,255,255,0.08)" }}
-                  onMouseEnter={(e) => (e.currentTarget.style.borderColor = "rgba(255,255,255,0.2)")}
-                  onMouseLeave={(e) => (e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)")}
+                  className="p-2.5 rounded-xl border transition-all duration-200"
+                  style={{ borderColor: t.border, color: t.textFaint }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = t.borderHover;
+                    e.currentTarget.style.color = t.text;
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = t.border;
+                    e.currentTarget.style.color = t.textFaint;
+                  }}
                 >
                   <Icon size={16} />
                 </a>
@@ -707,8 +862,8 @@ function About() {
           <div className="space-y-8">
             <motion.div {...stagger(0)}>
               <p
-                className="text-white/30 uppercase mb-4"
-                style={{ fontFamily: "var(--font-mono)", fontSize: "0.65rem", letterSpacing: "0.18em" }}
+                className="uppercase mb-4"
+                style={{ fontFamily: "var(--font-mono)", fontSize: "0.65rem", letterSpacing: "0.18em", color: t.textFaint }}
               >
                 Research Interests
               </p>
@@ -716,10 +871,16 @@ function About() {
                 {interests.map((item) => (
                   <span
                     key={item}
-                    className="px-3 py-1.5 text-sm rounded-full border text-white/50 hover:text-white/90 transition-all cursor-default"
-                    style={{ borderColor: "rgba(255,255,255,0.07)", backgroundColor: "rgba(255,255,255,0.02)" }}
-                    onMouseEnter={(e) => (e.currentTarget.style.borderColor = "rgba(255,255,255,0.18)")}
-                    onMouseLeave={(e) => (e.currentTarget.style.borderColor = "rgba(255,255,255,0.07)")}
+                    className="px-3 py-1.5 text-sm rounded-full border cursor-default transition-all duration-200"
+                    style={{ borderColor: t.border, backgroundColor: t.card, color: t.textMuted }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.borderColor = t.borderHover;
+                      e.currentTarget.style.color = t.text;
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.borderColor = t.border;
+                      e.currentTarget.style.color = t.textMuted;
+                    }}
                   >
                     {item}
                   </span>
@@ -731,10 +892,10 @@ function About() {
               {stats.map(({ value, label, color }) => (
                 <div
                   key={label}
-                  className="p-5 rounded-2xl border transition-all"
-                  style={{ borderColor: "rgba(255,255,255,0.06)", backgroundColor: "rgba(255,255,255,0.02)" }}
-                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.04)")}
-                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.02)")}
+                  className="p-5 rounded-2xl border transition-all duration-200"
+                  style={{ borderColor: t.border, backgroundColor: t.card }}
+                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = t.cardHover)}
+                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = t.card)}
                 >
                   <div
                     className="text-3xl font-black mb-1"
@@ -742,7 +903,7 @@ function About() {
                   >
                     {value}
                   </div>
-                  <div className="text-white/35 text-sm">{label}</div>
+                  <div className="text-sm" style={{ color: t.textFaint }}>{label}</div>
                 </div>
               ))}
             </motion.div>
@@ -753,19 +914,23 @@ function About() {
   );
 }
 
+// ─── Projects ──────────────────────────────────────────────────────────────────
+
 function Projects() {
+  const { t } = useTheme();
+
   return (
     <section id="projects" className="py-32 px-6">
       <div className="max-w-7xl mx-auto">
         <motion.div {...fadeUp} className="mb-16">
           <SectionLabel index="02" label="Projects" color="#7c5cfc" />
           <h2
-            className="text-5xl md:text-6xl font-black tracking-tight text-white mb-4"
-            style={{ fontFamily: "var(--font-display)" }}
+            className="text-5xl md:text-6xl font-black tracking-tight mb-4"
+            style={{ fontFamily: "var(--font-display)", color: t.text }}
           >
             Featured Work
           </h2>
-          <p className="text-white/35 max-w-lg">
+          <p style={{ color: t.textFaint, maxWidth: "36rem" }}>
             AI systems, ML applications, and research tools — built for real impact.
           </p>
         </motion.div>
@@ -776,33 +941,23 @@ function Projects() {
               key={p.title}
               {...stagger(i)}
               className="group relative flex flex-col p-6 rounded-2xl border transition-all duration-300 overflow-hidden"
-              style={{
-                borderColor: "rgba(255,255,255,0.06)",
-                backgroundColor: "rgba(255,255,255,0.018)",
-              }}
+              style={{ borderColor: t.border, backgroundColor: t.card }}
               onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.11)";
-                (e.currentTarget as HTMLElement).style.backgroundColor = "rgba(255,255,255,0.035)";
+                (e.currentTarget as HTMLElement).style.borderColor = t.borderHover;
+                (e.currentTarget as HTMLElement).style.backgroundColor = t.cardHover;
               }}
               onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.06)";
-                (e.currentTarget as HTMLElement).style.backgroundColor = "rgba(255,255,255,0.018)";
+                (e.currentTarget as HTMLElement).style.borderColor = t.border;
+                (e.currentTarget as HTMLElement).style.backgroundColor = t.card;
               }}
             >
-              {/* Top accent bar */}
               <div
                 className="absolute top-0 inset-x-0 h-px"
-                style={{
-                  background: `linear-gradient(90deg, transparent 0%, ${p.accent}80 50%, transparent 100%)`,
-                }}
+                style={{ background: `linear-gradient(90deg,transparent 0%,${p.accent}80 50%,transparent 100%)` }}
               />
-              {/* Glow blob */}
               <div
                 className="absolute -top-8 -right-8 w-24 h-24 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                style={{
-                  background: `radial-gradient(circle, ${p.accent}18 0%, transparent 70%)`,
-                  filter: "blur(16px)",
-                }}
+                style={{ background: `radial-gradient(circle,${p.accent}18 0%,transparent 70%)`, filter: "blur(16px)" }}
               />
 
               <div className="flex items-center justify-between mb-5">
@@ -818,19 +973,25 @@ function Projects() {
                 >
                   {p.category}
                 </span>
-                <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                   <a
                     href={p.github}
-                    className="p-1.5 rounded-lg text-white/30 hover:text-white transition-colors"
+                    className="p-1.5 rounded-lg transition-colors duration-200"
+                    style={{ color: t.textFaint }}
                     aria-label="GitHub"
+                    onMouseEnter={(e) => (e.currentTarget.style.color = t.text)}
+                    onMouseLeave={(e) => (e.currentTarget.style.color = t.textFaint)}
                   >
                     <Github size={14} />
                   </a>
                   {p.demo && (
                     <a
                       href={p.demo}
-                      className="p-1.5 rounded-lg text-white/30 hover:text-white transition-colors"
+                      className="p-1.5 rounded-lg transition-colors duration-200"
+                      style={{ color: t.textFaint }}
                       aria-label="Live demo"
+                      onMouseEnter={(e) => (e.currentTarget.style.color = t.text)}
+                      onMouseLeave={(e) => (e.currentTarget.style.color = t.textFaint)}
                     >
                       <ExternalLink size={14} />
                     </a>
@@ -839,22 +1000,25 @@ function Projects() {
               </div>
 
               <h3
-                className="text-white font-bold text-xl mb-3 group-hover:text-white transition-colors"
-                style={{ fontFamily: "var(--font-display)" }}
+                className="font-bold text-xl mb-3 flex-none"
+                style={{ fontFamily: "var(--font-display)", color: t.text }}
               >
                 {p.title}
               </h3>
-              <p className="text-white/45 text-sm leading-relaxed mb-5 flex-1">{p.description}</p>
+              <p className="text-sm leading-relaxed mb-5 flex-1" style={{ color: t.textMuted }}>
+                {p.description}
+              </p>
 
               <div className="flex flex-wrap gap-1.5">
                 {p.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="text-xs px-2 py-1 rounded-md text-white/35"
+                    className="text-xs px-2 py-1 rounded-md"
                     style={{
                       fontFamily: "var(--font-mono)",
-                      backgroundColor: "rgba(255,255,255,0.04)",
-                      border: "1px solid rgba(255,255,255,0.05)",
+                      backgroundColor: t.tagBg,
+                      border: `1px solid ${t.tagBorder}`,
+                      color: t.textFaint,
                     }}
                   >
                     {tag}
@@ -871,12 +1035,12 @@ function Projects() {
             target="_blank"
             rel="noopener noreferrer"
             className="group flex flex-col items-center justify-center gap-3 p-6 rounded-2xl border transition-all duration-300 min-h-[180px]"
-            style={{ borderColor: "rgba(255,255,255,0.06)", borderStyle: "dashed" }}
-            onMouseEnter={(e) => (e.currentTarget.style.borderColor = "rgba(255,255,255,0.15)")}
-            onMouseLeave={(e) => (e.currentTarget.style.borderColor = "rgba(255,255,255,0.06)")}
+            style={{ borderColor: t.border, borderStyle: "dashed" }}
+            onMouseEnter={(e) => (e.currentTarget.style.borderColor = t.borderHover)}
+            onMouseLeave={(e) => (e.currentTarget.style.borderColor = t.border)}
           >
-            <Github size={22} className="text-white/20 group-hover:text-white/50 transition-colors" />
-            <span className="text-white/25 group-hover:text-white/55 transition-colors text-sm text-center">
+            <Github size={22} className="transition-colors duration-200" style={{ color: t.textVeryFaint }} />
+            <span className="text-sm text-center transition-colors duration-200" style={{ color: t.textVeryFaint }}>
               View all projects on GitHub
             </span>
           </motion.a>
@@ -886,19 +1050,23 @@ function Projects() {
   );
 }
 
+// ─── Research ──────────────────────────────────────────────────────────────────
+
 function Research() {
+  const { t } = useTheme();
+
   return (
     <section id="research" className="py-32 px-6">
       <div className="max-w-7xl mx-auto">
         <motion.div {...fadeUp} className="mb-16">
           <SectionLabel index="03" label="Research" color="#06b6d4" />
           <h2
-            className="text-5xl md:text-6xl font-black tracking-tight text-white mb-4"
-            style={{ fontFamily: "var(--font-display)" }}
+            className="text-5xl md:text-6xl font-black tracking-tight mb-4"
+            style={{ fontFamily: "var(--font-display)", color: t.text }}
           >
             Research Focus
           </h2>
-          <p className="text-white/35 max-w-xl">
+          <p style={{ color: t.textFaint, maxWidth: "40rem" }}>
             Investigating AI systems reliability, language understanding, and the science of rigorous model evaluation.
           </p>
         </motion.div>
@@ -910,32 +1078,28 @@ function Research() {
               <motion.div
                 key={area.title}
                 {...stagger(i)}
-                className="p-6 rounded-2xl border transition-all group"
-                style={{
-                  borderColor: "rgba(255,255,255,0.06)",
-                  backgroundColor: "rgba(255,255,255,0.018)",
-                }}
-                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.035)")}
-                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.018)")}
+                className="p-6 rounded-2xl border transition-all duration-200"
+                style={{ borderColor: t.border, backgroundColor: t.card }}
+                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = t.cardHover)}
+                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = t.card)}
               >
                 <div className="flex items-start gap-4">
                   <div
                     className="p-3 rounded-xl flex-shrink-0"
-                    style={{
-                      border: `1px solid ${area.color}25`,
-                      backgroundColor: `${area.color}08`,
-                    }}
+                    style={{ border: `1px solid ${area.color}25`, backgroundColor: `${area.color}08` }}
                   >
                     <Icon size={18} style={{ color: area.color }} />
                   </div>
                   <div>
                     <h3
-                      className="text-white font-semibold mb-2"
-                      style={{ fontFamily: "var(--font-display)" }}
+                      className="font-semibold mb-2"
+                      style={{ fontFamily: "var(--font-display)", color: t.text }}
                     >
                       {area.title}
                     </h3>
-                    <p className="text-white/45 text-sm leading-relaxed">{area.description}</p>
+                    <p className="text-sm leading-relaxed" style={{ color: t.textMuted }}>
+                      {area.description}
+                    </p>
                   </div>
                 </div>
               </motion.div>
@@ -943,11 +1107,10 @@ function Research() {
           })}
         </div>
 
-        {/* Publications */}
         <motion.div {...fadeUp}>
           <p
-            className="text-white/25 uppercase mb-6"
-            style={{ fontFamily: "var(--font-mono)", fontSize: "0.65rem", letterSpacing: "0.2em" }}
+            className="uppercase mb-6"
+            style={{ fontFamily: "var(--font-mono)", fontSize: "0.65rem", letterSpacing: "0.2em", color: t.textVeryFaint }}
           >
             Publications & Manuscripts
           </p>
@@ -956,29 +1119,30 @@ function Research() {
               <motion.div
                 key={pub.title}
                 {...stagger(i)}
-                className="flex items-start gap-5 p-5 rounded-2xl border transition-all group"
-                style={{
-                  borderColor: "rgba(255,255,255,0.06)",
-                  backgroundColor: "rgba(255,255,255,0.018)",
-                }}
-                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.035)")}
-                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.018)")}
+                className="flex items-start gap-5 p-5 rounded-2xl border transition-all duration-200"
+                style={{ borderColor: t.border, backgroundColor: t.card }}
+                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = t.cardHover)}
+                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = t.card)}
               >
                 <FileText size={15} className="flex-shrink-0 mt-0.5" style={{ color: "#4080ff" }} />
                 <div className="flex-1 min-w-0">
-                  <p className="text-white/75 font-medium mb-1.5 group-hover:text-white transition-colors text-sm">
+                  <p className="font-medium mb-1.5 text-sm transition-colors duration-200" style={{ color: t.textSub }}>
                     {pub.title}
                   </p>
                   <div className="flex flex-wrap items-center gap-3">
                     <span
-                      className="text-white/25 text-xs"
-                      style={{ fontFamily: "var(--font-mono)" }}
+                      className="text-xs"
+                      style={{ fontFamily: "var(--font-mono)", color: t.textVeryFaint }}
                     >
                       {pub.venue}
                     </span>
                     <span
-                      className="text-xs px-2 py-0.5 rounded-full border text-white/25"
-                      style={{ borderColor: "rgba(255,255,255,0.07)", fontFamily: "var(--font-mono)" }}
+                      className="text-xs px-2 py-0.5 rounded-full border"
+                      style={{
+                        fontFamily: "var(--font-mono)",
+                        borderColor: t.border,
+                        color: t.textVeryFaint,
+                      }}
                     >
                       {pub.type}
                     </span>
@@ -993,15 +1157,19 @@ function Research() {
   );
 }
 
+// ─── Skills ────────────────────────────────────────────────────────────────────
+
 function Skills() {
+  const { t } = useTheme();
+
   return (
     <section id="skills" className="py-32 px-6">
       <div className="max-w-7xl mx-auto">
         <motion.div {...fadeUp} className="mb-16">
           <SectionLabel index="04" label="Skills" color="#10b981" />
           <h2
-            className="text-5xl md:text-6xl font-black tracking-tight text-white"
-            style={{ fontFamily: "var(--font-display)" }}
+            className="text-5xl md:text-6xl font-black tracking-tight"
+            style={{ fontFamily: "var(--font-display)", color: t.text }}
           >
             Technical Stack
           </h2>
@@ -1014,20 +1182,14 @@ function Skills() {
               <motion.div
                 key={group.category}
                 {...stagger(i)}
-                className="relative p-6 rounded-2xl border transition-all overflow-hidden group"
-                style={{
-                  borderColor: "rgba(255,255,255,0.06)",
-                  backgroundColor: "rgba(255,255,255,0.018)",
-                }}
-                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.035)")}
-                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.018)")}
+                className="relative p-6 rounded-2xl border transition-all duration-200 overflow-hidden group"
+                style={{ borderColor: t.border, backgroundColor: t.card }}
+                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = t.cardHover)}
+                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = t.card)}
               >
                 <div
                   className="absolute -top-6 -right-6 w-20 h-20 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                  style={{
-                    background: `radial-gradient(circle, ${group.accent}20 0%, transparent 70%)`,
-                    filter: "blur(12px)",
-                  }}
+                  style={{ background: `radial-gradient(circle,${group.accent}18 0%,transparent 70%)`, filter: "blur(12px)" }}
                 />
                 <div className="flex items-center gap-3 mb-5">
                   <div
@@ -1037,8 +1199,8 @@ function Skills() {
                     <Icon size={15} style={{ color: group.accent }} />
                   </div>
                   <h3
-                    className="text-white font-semibold"
-                    style={{ fontFamily: "var(--font-display)" }}
+                    className="font-semibold"
+                    style={{ fontFamily: "var(--font-display)", color: t.text }}
                   >
                     {group.category}
                   </h3>
@@ -1047,14 +1209,21 @@ function Skills() {
                   {group.items.map((item) => (
                     <span
                       key={item}
-                      className="text-xs px-2.5 py-1 rounded-lg text-white/40 hover:text-white/80 transition-all cursor-default"
+                      className="text-xs px-2.5 py-1 rounded-lg cursor-default transition-all duration-200"
                       style={{
                         fontFamily: "var(--font-mono)",
-                        backgroundColor: "rgba(255,255,255,0.04)",
-                        border: "1px solid rgba(255,255,255,0.05)",
+                        backgroundColor: t.tagBg,
+                        border: `1px solid ${t.tagBorder}`,
+                        color: t.textFaint,
                       }}
-                      onMouseEnter={(e) => (e.currentTarget.style.borderColor = "rgba(255,255,255,0.12)")}
-                      onMouseLeave={(e) => (e.currentTarget.style.borderColor = "rgba(255,255,255,0.05)")}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.borderColor = t.tagBorderHover;
+                        e.currentTarget.style.color = t.textSub;
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.borderColor = t.tagBorder;
+                        e.currentTarget.style.color = t.textFaint;
+                      }}
                     >
                       {item}
                     </span>
@@ -1069,29 +1238,28 @@ function Skills() {
   );
 }
 
+// ─── Experience ────────────────────────────────────────────────────────────────
+
 function Experience() {
+  const { t } = useTheme();
+
   return (
     <section id="experience" className="py-32 px-6">
       <div className="max-w-4xl mx-auto">
         <motion.div {...fadeUp} className="mb-16">
           <SectionLabel index="05" label="Experience" color="#f59e0b" />
           <h2
-            className="text-5xl md:text-6xl font-black tracking-tight text-white"
-            style={{ fontFamily: "var(--font-display)" }}
+            className="text-5xl md:text-6xl font-black tracking-tight"
+            style={{ fontFamily: "var(--font-display)", color: t.text }}
           >
             Journey
           </h2>
         </motion.div>
 
         <div className="relative">
-          {/* Timeline rail */}
           <div
             className="absolute top-0 bottom-0"
-            style={{
-              left: 27,
-              width: 1,
-              background: "linear-gradient(to bottom, rgba(64,128,255,0.5), rgba(255,255,255,0.06) 60%, transparent)",
-            }}
+            style={{ left: 27, width: 1, background: t.timelineRail }}
           />
 
           <div className="space-y-6">
@@ -1099,31 +1267,24 @@ function Experience() {
               const Icon = item.icon;
               return (
                 <motion.div key={i} {...stagger(i)} className="relative pl-16">
-                  {/* Icon node */}
                   <div
                     className="absolute left-0 top-0 w-14 h-14 flex items-center justify-center rounded-2xl"
-                    style={{
-                      border: `1px solid ${item.accent}25`,
-                      backgroundColor: `${item.accent}08`,
-                    }}
+                    style={{ border: `1px solid ${item.accent}25`, backgroundColor: `${item.accent}08` }}
                   >
                     <Icon size={16} style={{ color: item.accent }} />
                   </div>
 
                   <div
-                    className="p-5 rounded-2xl border transition-all"
-                    style={{
-                      borderColor: "rgba(255,255,255,0.06)",
-                      backgroundColor: "rgba(255,255,255,0.018)",
-                    }}
-                    onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.035)")}
-                    onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.018)")}
+                    className="p-5 rounded-2xl border transition-all duration-200"
+                    style={{ borderColor: t.border, backgroundColor: t.card }}
+                    onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = t.cardHover)}
+                    onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = t.card)}
                   >
                     <div className="flex flex-wrap items-start justify-between gap-3 mb-3">
                       <div>
                         <h3
-                          className="text-white font-bold text-lg"
-                          style={{ fontFamily: "var(--font-display)" }}
+                          className="font-bold text-lg"
+                          style={{ fontFamily: "var(--font-display)", color: t.text }}
                         >
                           {item.title}
                         </h3>
@@ -1133,30 +1294,33 @@ function Experience() {
                       </div>
                       <div className="text-right flex-shrink-0">
                         <div
-                          className="text-white/30 text-xs"
-                          style={{ fontFamily: "var(--font-mono)" }}
+                          className="text-xs"
+                          style={{ fontFamily: "var(--font-mono)", color: t.textFaint }}
                         >
                           {item.period}
                         </div>
                         <div
-                          className="flex items-center gap-1 text-white/20 text-xs mt-1 justify-end"
-                          style={{ fontFamily: "var(--font-mono)" }}
+                          className="flex items-center gap-1 text-xs mt-1 justify-end"
+                          style={{ fontFamily: "var(--font-mono)", color: t.textVeryFaint }}
                         >
                           <MapPin size={10} /> {item.location}
                         </div>
                       </div>
                     </div>
 
-                    <p className="text-white/45 text-sm leading-relaxed mb-3">{item.description}</p>
+                    <p className="text-sm leading-relaxed mb-3" style={{ color: t.textMuted }}>
+                      {item.description}
+                    </p>
 
                     <div className="flex flex-wrap gap-1.5">
                       {item.tags.map((tag) => (
                         <span
                           key={tag}
-                          className="text-xs px-2 py-0.5 rounded-full border text-white/25"
+                          className="text-xs px-2 py-0.5 rounded-full border"
                           style={{
-                            borderColor: "rgba(255,255,255,0.07)",
                             fontFamily: "var(--font-mono)",
+                            borderColor: t.border,
+                            color: t.textVeryFaint,
                           }}
                         >
                           {tag}
@@ -1174,19 +1338,25 @@ function Experience() {
   );
 }
 
+// ─── Blog ──────────────────────────────────────────────────────────────────────
+
 function Blog() {
+  const { t } = useTheme();
+
   return (
     <section id="blog" className="py-32 px-6">
       <div className="max-w-7xl mx-auto">
         <motion.div {...fadeUp} className="mb-16">
           <SectionLabel index="06" label="Writing" color="#ef4444" />
           <h2
-            className="text-5xl md:text-6xl font-black tracking-tight text-white mb-4"
-            style={{ fontFamily: "var(--font-display)" }}
+            className="text-5xl md:text-6xl font-black tracking-tight mb-4"
+            style={{ fontFamily: "var(--font-display)", color: t.text }}
           >
             Thoughts & Research Notes
           </h2>
-          <p className="text-white/35">On AI engineering, evaluation methodology, and the future of intelligent systems.</p>
+          <p style={{ color: t.textFaint }}>
+            On AI engineering, evaluation methodology, and the future of intelligent systems.
+          </p>
         </motion.div>
 
         <div className="grid md:grid-cols-3 gap-4">
@@ -1196,17 +1366,14 @@ function Blog() {
               {...stagger(i)}
               href="#"
               className="group flex flex-col p-6 rounded-2xl border transition-all duration-300"
-              style={{
-                borderColor: "rgba(255,255,255,0.06)",
-                backgroundColor: "rgba(255,255,255,0.018)",
-              }}
+              style={{ borderColor: t.border, backgroundColor: t.card }}
               onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.11)";
-                (e.currentTarget as HTMLElement).style.backgroundColor = "rgba(255,255,255,0.035)";
+                (e.currentTarget as HTMLElement).style.borderColor = t.borderHover;
+                (e.currentTarget as HTMLElement).style.backgroundColor = t.cardHover;
               }}
               onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.06)";
-                (e.currentTarget as HTMLElement).style.backgroundColor = "rgba(255,255,255,0.018)";
+                (e.currentTarget as HTMLElement).style.borderColor = t.border;
+                (e.currentTarget as HTMLElement).style.backgroundColor = t.card;
               }}
             >
               <div className="flex items-center justify-between mb-5">
@@ -1222,29 +1389,28 @@ function Blog() {
                 >
                   {post.tag}
                 </span>
-                <ExternalLink
-                  size={14}
-                  className="text-white/20 group-hover:text-white/50 transition-colors"
-                />
+                <ExternalLink size={14} className="transition-colors duration-200" style={{ color: t.textVeryFaint }} />
               </div>
 
               <h3
-                className="text-white/85 font-bold mb-3 leading-snug group-hover:text-white transition-colors flex-1"
-                style={{ fontFamily: "var(--font-display)" }}
+                className="font-bold mb-3 leading-snug flex-1 transition-colors duration-200"
+                style={{ fontFamily: "var(--font-display)", color: t.textSub }}
               >
                 {post.title}
               </h3>
-              <p className="text-white/35 text-sm leading-relaxed mb-5">{post.excerpt}</p>
+              <p className="text-sm leading-relaxed mb-5" style={{ color: t.textFaint }}>
+                {post.excerpt}
+              </p>
 
               <div
-                className="flex items-center gap-2 text-white/20 text-xs mt-auto"
-                style={{ fontFamily: "var(--font-mono)" }}
+                className="flex items-center gap-2 mt-auto"
+                style={{ fontFamily: "var(--font-mono)", fontSize: "0.7rem", color: t.textVeryFaint }}
               >
                 <Calendar size={10} />
                 <span>{post.date}</span>
                 <span
                   className="w-1 h-1 rounded-full"
-                  style={{ backgroundColor: "rgba(255,255,255,0.2)" }}
+                  style={{ backgroundColor: t.textVeryFaint }}
                 />
                 <span>{post.readTime} read</span>
               </div>
@@ -1256,37 +1422,37 @@ function Blog() {
   );
 }
 
+// ─── Contact ───────────────────────────────────────────────────────────────────
+
 function Contact() {
+  const { t } = useTheme();
+
   return (
     <section id="contact" className="py-32 px-6">
       <div className="max-w-3xl mx-auto">
-        {/* Decorative top line */}
         <div
           className="h-px w-full max-w-xs mx-auto mb-20"
-          style={{ background: "linear-gradient(90deg, transparent, rgba(64,128,255,0.4), transparent)" }}
+          style={{ background: "linear-gradient(90deg,transparent,rgba(64,128,255,0.4),transparent)" }}
         />
 
         <motion.div {...fadeUp} className="text-center mb-12">
           <SectionLabel index="07" label="Contact" color="#4080ff" />
           <h2
-            className="text-5xl md:text-7xl font-black tracking-tight text-white mb-6"
-            style={{ fontFamily: "var(--font-display)" }}
+            className="text-5xl md:text-7xl font-black tracking-tight mb-6"
+            style={{ fontFamily: "var(--font-display)", color: t.text }}
           >
             {"Let's"} Connect
           </h2>
-          <p className="text-white/45 text-lg leading-relaxed max-w-xl mx-auto">
+          <p className="text-lg leading-relaxed max-w-xl mx-auto" style={{ color: t.textMuted }}>
             Whether you are a researcher, recruiter, or collaborator — I am always open to
             meaningful conversations about AI, research, and what comes next.
           </p>
         </motion.div>
 
-        <motion.div
-          {...stagger(1)}
-          className="flex flex-wrap items-center justify-center gap-3 mb-16"
-        >
+        <motion.div {...stagger(1)} className="flex flex-wrap items-center justify-center gap-3 mb-16">
           <a
             href="mailto:tobi@example.com"
-            className="flex items-center gap-2.5 px-7 py-3.5 rounded-full text-white font-medium transition-all"
+            className="flex items-center gap-2.5 px-7 py-3.5 rounded-full text-white font-medium transition-all duration-200"
             style={{ backgroundColor: "#4080ff" }}
             onMouseEnter={(e) => {
               e.currentTarget.style.backgroundColor = "#5592ff";
@@ -1297,18 +1463,22 @@ function Contact() {
               e.currentTarget.style.boxShadow = "none";
             }}
           >
-            <Mail size={16} />
-            Send Email
+            <Mail size={16} /> Send Email
           </a>
           <a
             href="/cv.pdf"
-            className="flex items-center gap-2.5 px-7 py-3.5 rounded-full border text-white/60 hover:text-white transition-all"
-            style={{ borderColor: "rgba(255,255,255,0.12)" }}
-            onMouseEnter={(e) => (e.currentTarget.style.borderColor = "rgba(255,255,255,0.28)")}
-            onMouseLeave={(e) => (e.currentTarget.style.borderColor = "rgba(255,255,255,0.12)")}
+            className="flex items-center gap-2.5 px-7 py-3.5 rounded-full border transition-all duration-200"
+            style={{ borderColor: t.border, color: t.textMuted }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = t.borderHover;
+              e.currentTarget.style.color = t.text;
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = t.border;
+              e.currentTarget.style.color = t.textMuted;
+            }}
           >
-            <Download size={16} />
-            Download CV
+            <Download size={16} /> Download CV
           </a>
         </motion.div>
 
@@ -1327,22 +1497,24 @@ function Contact() {
               className="flex flex-col items-center gap-2.5 group"
             >
               <div
-                className="p-4 rounded-2xl border text-white/30 group-hover:text-white transition-all duration-200"
-                style={{ borderColor: "rgba(255,255,255,0.07)", backgroundColor: "rgba(255,255,255,0.02)" }}
+                className="p-4 rounded-2xl border transition-all duration-200"
+                style={{ borderColor: t.border, backgroundColor: t.card, color: t.textFaint }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = "rgba(255,255,255,0.18)";
-                  e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.05)";
+                  e.currentTarget.style.borderColor = t.borderHover;
+                  e.currentTarget.style.backgroundColor = t.cardHover;
+                  e.currentTarget.style.color = t.text;
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = "rgba(255,255,255,0.07)";
-                  e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.02)";
+                  e.currentTarget.style.borderColor = t.border;
+                  e.currentTarget.style.backgroundColor = t.card;
+                  e.currentTarget.style.color = t.textFaint;
                 }}
               >
                 <Icon size={20} />
               </div>
               <span
-                className="text-white/25 group-hover:text-white/60 transition-colors"
-                style={{ fontFamily: "var(--font-mono)", fontSize: "0.65rem", letterSpacing: "0.12em" }}
+                className="transition-colors duration-200"
+                style={{ fontFamily: "var(--font-mono)", fontSize: "0.65rem", letterSpacing: "0.12em", color: t.textVeryFaint }}
               >
                 {label}
               </span>
@@ -1354,23 +1526,17 @@ function Contact() {
   );
 }
 
+// ─── Footer ────────────────────────────────────────────────────────────────────
+
 function Footer() {
+  const { t } = useTheme();
   return (
-    <footer
-      className="py-8 px-6 border-t"
-      style={{ borderColor: "rgba(255,255,255,0.05)" }}
-    >
+    <footer className="py-8 px-6 border-t" style={{ borderColor: t.navBorder }}>
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3">
-        <p
-          className="text-white/18 text-xs"
-          style={{ fontFamily: "var(--font-mono)", letterSpacing: "0.08em" }}
-        >
+        <p style={{ fontFamily: "var(--font-mono)", fontSize: "0.72rem", letterSpacing: "0.08em", color: t.textDim }}>
           © 2025 Tobi Oyekanmi
         </p>
-        <p
-          className="text-white/15 text-xs"
-          style={{ fontFamily: "var(--font-mono)", letterSpacing: "0.08em" }}
-        >
+        <p style={{ fontFamily: "var(--font-mono)", fontSize: "0.68rem", letterSpacing: "0.08em", color: t.textDim }}>
           AI Engineer · ML Researcher · PhD Candidate — University of Delaware
         </p>
       </div>
@@ -1381,15 +1547,17 @@ function Footer() {
 // ─── App ───────────────────────────────────────────────────────────────────────
 
 export default function App() {
+  const [isDark, setIsDark] = useState(true);
   const [activeSection, setActiveSection] = useState("hero");
+
+  const t = isDark ? DARK : LIGHT;
+  const toggle = () => setIsDark((d) => !d);
 
   useEffect(() => {
     const ids = ["hero", "about", "projects", "research", "skills", "experience", "blog", "contact"];
     const observer = new IntersectionObserver(
       (entries) => {
-        entries.forEach((e) => {
-          if (e.isIntersecting) setActiveSection(e.target.id);
-        });
+        entries.forEach((e) => { if (e.isIntersecting) setActiveSection(e.target.id); });
       },
       { rootMargin: "-40% 0px -55% 0px", threshold: 0 }
     );
@@ -1401,19 +1569,28 @@ export default function App() {
   }, []);
 
   return (
-    <div className="bg-background text-foreground min-h-screen antialiased overflow-x-hidden">
-      <Navbar active={activeSection} />
-      <main>
-        <Hero />
-        <About />
-        <Projects />
-        <Research />
-        <Skills />
-        <Experience />
-        <Blog />
-        <Contact />
-      </main>
-      <Footer />
-    </div>
+    <ThemeCtx.Provider value={{ t, isDark, toggle }}>
+      <div
+        className="min-h-screen antialiased overflow-x-hidden"
+        style={{
+          backgroundColor: t.bg,
+          color: t.text,
+          transition: "background-color 0.4s ease, color 0.4s ease",
+        }}
+      >
+        <Navbar active={activeSection} />
+        <main>
+          <Hero />
+          <About />
+          <Projects />
+          <Research />
+          <Skills />
+          <Experience />
+          <Blog />
+          <Contact />
+        </main>
+        <Footer />
+      </div>
+    </ThemeCtx.Provider>
   );
 }
