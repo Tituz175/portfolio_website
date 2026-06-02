@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import useTheme from "../../../hooks/useTheme";
-import ThemeToggle from "../../ui/ThemeToggle";
+import ThemeToggle from "../ui/ThemeToggle";
 import { ChevronRight, Menu, X } from "lucide-react";
 
 const NAV_LINKS = [
