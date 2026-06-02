@@ -15,7 +15,7 @@ export default function SectionLabel({
       <span
         style={{
           fontFamily: "var(--font-mono)",
-          fontSize: "0.7rem",
+          fontSize: "0.9rem",
           color,
           letterSpacing: "0.18em",
         }}
@@ -29,7 +29,7 @@ export default function SectionLabel({
       <span
         style={{
           fontFamily: "var(--font-mono)",
-          fontSize: "0.65rem",
+          fontSize: "0.90rem",
           letterSpacing: "0.2em",
           color: theme.textVeryFaint,
         }}

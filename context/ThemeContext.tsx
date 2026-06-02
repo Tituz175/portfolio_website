@@ -1,10 +1,14 @@
-import { createContext } from 'react';
-import { DARK, Tok } from '../styles/theme';
+import { createContext } from "react";
+import { DARK, Tok } from "../styles/theme";
 
-const ThemeCtx = createContext<{ theme: Tok; isDark: boolean; toggle: () => void }>({
+export interface ThemeContextType {
+  theme: Tok;
+  isDark: boolean;
+  toggle: () => void;
+}
+
+export const ThemeCtx = createContext<ThemeContextType>({
   theme: DARK,
   isDark: true,
   toggle: () => {},
 });
-
-export { ThemeCtx };

@@ -13,6 +13,11 @@ import {
 
 function HeroBg() {
   const { theme } = useTheme();
+
+  const { isDark } = useTheme();
+
+  console.log("Hero theme:", isDark);
+
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none select-none">
       <div
@@ -253,14 +258,14 @@ export default function Hero() {
         <span
           style={{
             fontFamily: "var(--font-mono)",
-            fontSize: "0.62rem",
+            fontSize: "0.90rem",
             letterSpacing: "0.2em",
           }}
         >
           SCROLL
         </span>
         <div
-          className="w-px h-10"
+          className="w-px h-12"
           style={{
             background: `linear-gradient(to bottom, ${theme.textVeryFaint}, transparent)`,
           }}

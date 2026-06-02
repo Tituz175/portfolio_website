@@ -10,7 +10,7 @@ import useTheme from "../../../hooks/useTheme";
 import SectionLabel from "../layout/SectionLabel";
 import { fadeUp, stagger } from "../../../utils/animation";
 
-export function About() {
+export default function About() {
   const { theme } = useTheme();
 
   const interests = [
@@ -140,7 +140,7 @@ export function About() {
                 className="uppercase mb-4"
                 style={{
                   fontFamily: "var(--font-mono)",
-                  fontSize: "0.65rem",
+                  fontSize: "0.7rem",
                   letterSpacing: "0.18em",
                   color: theme.textFaint,
                 }}

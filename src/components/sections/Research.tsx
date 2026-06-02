@@ -127,7 +127,7 @@ export default function Research() {
             className="uppercase mb-6"
             style={{
               fontFamily: "var(--font-mono)",
-              fontSize: "0.65rem",
+              fontSize: "0.7rem",
               letterSpacing: "0.2em",
               color: theme.textVeryFaint,
             }}
