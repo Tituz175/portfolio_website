@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+
 import Navbar from "../components/layout/Navbar";
 import Hero from "../components/sections/Hero";
 import About from "../components/sections/About";
@@ -9,57 +11,49 @@ import Research from "../components/sections/Research";
 import Contact from "../components/sections/Contact";
 import Footer from "../components/layout/Footer";
 
-import { useEffect, useState } from "react";
 import { DARK, LIGHT } from "../../styles/theme";
 import { ThemeCtx } from "../../context/ThemeContext";
 
+// type ThemeMode = "light" | "dark" | "system";
+
 export default function App() {
-  const [isDark, setIsDark] = useState(() => {
-    // Check saved preference first
-    const savedTheme = localStorage.getItem("theme");
+  // =========================
+  // THEME
+  // =========================
 
-    if (savedTheme === "dark") return true;
-    if (savedTheme === "light") return false;
+  const [isDark, setIsDark] = useState(
+    window.matchMedia("(prefers-color-scheme: dark)").matches
+  );
 
-    // Otherwise use system preference
-    return window.matchMedia("(prefers-color-scheme: dark)").matches;
-  });
+  // const [prefersDark, setPrefersDark] = useState(() =>
+  //   window.matchMedia("(prefers-color-scheme: dark)").matches
+  // );
 
-  const [activeSection, setActiveSection] = useState("hero");
+ useEffect(() => {
+  const media = window.matchMedia("(prefers-color-scheme: dark)");
 
-  const theme = isDark ? DARK : LIGHT;
-
-  const toggle = () => {
-    setIsDark((prev) => {
-      const next = !prev;
-
-      // Save preference
-      localStorage.setItem("theme", next ? "dark" : "light");
-
-      return next;
-    });
+  const handleChange = (e: MediaQueryListEvent) => {
+    setIsDark(e.matches);
   };
 
-  // Listen for system theme changes ONLY if user
-  // has not manually selected a theme
-  useEffect(() => {
-    const media = window.matchMedia("(prefers-color-scheme: dark)");
+  media.addEventListener("change", handleChange);
 
-    const handleChange = (e: MediaQueryListEvent) => {
-      const savedTheme = localStorage.getItem("theme");
+  return () => {
+    media.removeEventListener("change", handleChange);
+  };
+}, []);
 
-      // Ignore system changes if user already chose manually
-      if (savedTheme) return;
+  const toggle = () => {
+  setIsDark(prev => !prev);
+};
 
-      setIsDark(e.matches);
-    };
+const theme = isDark ? DARK : LIGHT;
 
-    media.addEventListener("change", handleChange);
+  // =========================
+  // ACTIVE SECTION TRACKING
+  // =========================
 
-    return () => {
-      media.removeEventListener("change", handleChange);
-    };
-  }, []);
+  const [activeSection, setActiveSection] = useState("hero");
 
   useEffect(() => {
     const ids = [
@@ -69,35 +63,54 @@ export default function App() {
       "research",
       "skills",
       "experience",
-      "blog",
+      // "blog",
       "contact",
     ];
 
     const observer = new IntersectionObserver(
       (entries) => {
-        entries.forEach((e) => {
-          if (e.isIntersecting) setActiveSection(e.target.id);
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveSection(entry.target.id);
+          }
         });
       },
-      { rootMargin: "-40% 0px -55% 0px", threshold: 0 }
+      {
+        rootMargin: "-40% 0px -55% 0px",
+        threshold: 0,
+      }
     );
 
     ids.forEach((id) => {
       const el = document.getElementById(id);
-      if (el) observer.observe(el);
+
+      if (el) {
+        observer.observe(el);
+      }
     });
 
     return () => observer.disconnect();
   }, []);
 
+  // =========================
+  // RENDER
+  // =========================
+
   return (
-    <ThemeCtx.Provider value={{ theme: theme, isDark, toggle }}>
+    <ThemeCtx.Provider
+      value={{
+        theme,
+        isDark,
+        toggle,
+      }}
+    >
       <div
         className="min-h-screen antialiased overflow-x-hidden"
         style={{
           backgroundColor: theme.bg,
           color: theme.text,
-          transition: "background-color 0.4s ease, color 0.4s ease",
+          transition:
+            "background-color 0.4s ease, color 0.4s ease",
         }}
       >
         <Navbar active={activeSection} />
