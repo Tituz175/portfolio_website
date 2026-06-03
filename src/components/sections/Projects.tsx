@@ -193,7 +193,7 @@ export default function Projects() {
           {/* View all */}
           <motion.a
             {...stagger(PROJECTS.length)}
-            href="https://github.com"
+            href="https://github.com/Tituz175?tab=repositories"
             target="_blank"
             rel="noopener noreferrer"
             className="group flex flex-col items-center justify-center gap-3 p-6 rounded-2xl border transition-all duration-300 min-h-[180px]"

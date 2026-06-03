@@ -214,9 +214,9 @@ export default function Hero() {
           className="flex items-center justify-center gap-4"
         >
           {[
-            { icon: Github, href: "https://github.com", label: "GitHub" },
-            { icon: Linkedin, href: "https://linkedin.com", label: "LinkedIn" },
-            { icon: BookOpen, href: "#", label: "Google Scholar" },
+            { icon: Github, href: "https://github.com/Tituz175", label: "GitHub" },
+            { icon: Linkedin, href: "https://www.linkedin.com/in/tobioyekanmi/", label: "LinkedIn" },
+            { icon: BookOpen, href: "https://www.researchgate.net/profile/Tobi-Oyekanmi-2?ev=hdr_xprf", label: "Google Scholar" },
           ].map(({ icon: Icon, href, label }) => (
             <a
               key={label}

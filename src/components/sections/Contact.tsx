@@ -77,10 +77,10 @@ export default function Contact() {
           className="flex items-center justify-center gap-10"
         >
           {[
-            { icon: Github, label: "GitHub", href: "https://github.com" },
-            { icon: Linkedin, label: "LinkedIn", href: "https://linkedin.com" },
-            { icon: BookOpen, label: "Scholar", href: "#" },
-            { icon: Mail, label: "Email", href: "mailto:tobi@example.com" },
+            { icon: Github, label: "GitHub", href: "https://github.com/Tituz175" },
+            { icon: Linkedin, label: "LinkedIn", href: "https://www.linkedin.com/in/tobioyekanmi/" },
+            { icon: BookOpen, label: "Scholar", href: "https://www.researchgate.net/profile/Tobi-Oyekanmi-2?ev=hdr_xprf" },
+            { icon: Mail, label: "Email", href: "mailto:tobititus.oyekanmi@gmail.com" },
           ].map(({ icon: Icon, label, href }) => (
             <a
               key={label}
