@@ -2,7 +2,15 @@ import { motion } from "motion/react";
 import useTheme from "../../../hooks/useTheme";
 import SectionLabel from "../layout/SectionLabel";
 import { fadeUp, stagger } from "../../../utils/animation";
-import { Cpu, Database, FileText, MessageSquare, Star } from "lucide-react";
+import {
+  Activity,
+  Cpu,
+  Database,
+  FileText,
+  MessageSquare,
+  Server,
+  Star,
+} from "lucide-react";
 
 const RESEARCH_AREAS = [
   {
@@ -33,20 +41,51 @@ const RESEARCH_AREAS = [
     icon: Database,
     color: "#10b981",
   },
+  {
+    title: "High-Performance ML Systems",
+    description:
+      "GPU-aware optimization, numerical linear algebra, and system-level performance work for efficient large-scale model training and inference.",
+    icon: Server,
+    color: "#f59e0b",
+  },
+  {
+    title: "Applied Deep Learning",
+    description:
+      "CNN-based diagnostic models for medical imaging and sensor-driven classification, taken from research to deployable, evaluated systems.",
+    icon: Activity,
+    color: "#ef4444",
+  },
 ];
 
 const PUBLICATIONS = [
   {
-    title:
-      "Evaluating Large Language Model Reasoning: A Systematic Benchmark Study",
-    venue: "In preparation · 2025",
-    type: "Conference Paper",
+    title: "Simulation Prediction of Background Radiation Using Machine Learning",
+    venue: "with P. Adigun, A. Adeniyi",
+    type: "Journal Article",
   },
   {
     title:
-      "Agentic AI Systems: Architecture Patterns for Multi-Step Task Completion",
-    venue: "Workshop manuscript · 2025",
-    type: "Workshop Paper",
+      "Detection and Interpretation of X-Ray Scans for the Presence of Pneumonia Using Convolutional Neural Network",
+    venue: "with P. Adigun, A. Adeniyi",
+    type: "Journal Article",
+  },
+  {
+    title:
+      "Deep Learning-based Diagnosis of Brain Cancer Using Convolutional Neural Networks on MRI Scans: A Comparative Study of Model Architectures and Tumor Classification Accuracy",
+    venue: "with P. Adigun, A. Adeniyi, N. Azeez",
+    type: "Journal Article",
+  },
+  {
+    title:
+      "Design and Evaluation of a Convolutional Neural Network Model for Automated Detection of Diabetic Retinopathy using Retinal Fundus Photographs",
+    venue: "with P. Adigun, A. Adeniyi",
+    type: "Journal Article",
+  },
+  {
+    title:
+      "Application of Artificial Intelligence Models in Teletherapy: A Review of Efficacy and Ethical Implications",
+    venue: "with A. Adeniyi, P. Adigun, V. Kolawole",
+    type: "Review Article",
   },
 ];
 

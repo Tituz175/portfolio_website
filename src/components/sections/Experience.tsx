@@ -2,57 +2,80 @@ import { motion } from "motion/react";
 import useTheme from "../../../hooks/useTheme";
 import SectionLabel from "../layout/SectionLabel";
 import { fadeUp, stagger } from "../../../utils/animation";
+import { accentText } from "../../../utils/color";
 import { GraduationCap, Briefcase, FlaskConical, MapPin } from "lucide-react";
 
 const EXPERIENCE = [
   {
-    title: "PhD in Computer Science",
-    org: "University of Delaware",
-    period: "Fall 2025 — Present",
-    location: "Newark, DE",
+    title: "MS in Computer Science",
+    org: "New Mexico Highlands University",
+    period: "Expected Fall 2026",
+    location: "Las Vegas, NM",
     description:
-      "Incoming PhD student. Research focus on AI systems, natural language processing, and machine learning. Advised by faculty in the NLP and AI research groups.",
-    tags: ["AI Research", "NLP", "Machine Learning"],
+      "Advanced coursework and research in machine learning systems, high-performance computing, and scalable AI. Applying to PhD programs to continue research in efficient large-scale model training and inference.",
+    tags: ["ML Systems", "HPC", "Research"],
     icon: GraduationCap,
     accent: "#4080ff",
   },
   {
-    title: "AI Engineer",
-    org: "Research & Industry Projects",
-    period: "2023 — 2025",
-    location: "Remote",
+    title: "Teaching Assistant",
+    org: "NMHU, Department of Computer Science",
+    period: "Fall 2024 — Present",
+    location: "Las Vegas, NM",
     description:
-      "Designed and deployed production ML systems, agentic AI pipelines, and NLP applications across multiple research and engineering initiatives serving real users.",
-    tags: ["LLMs", "Agentic AI", "ML Systems"],
+      "Taught and supported courses spanning Java programming, Unix systems, artificial intelligence, and software engineering across six semesters.",
+    tags: ["Teaching", "AI", "Software Engineering"],
     icon: Briefcase,
-    accent: "#7c5cfc",
+    accent: "#f59e0b",
   },
   {
-    title: "Machine Learning Researcher",
-    org: "Independent Research",
-    period: "2022 — 2025",
-    location: "Remote",
+    title: "NSF BioPACIFIC MIP PREM Research Program",
+    org: "NMHU, Computer Science",
+    period: "Summer 2025",
+    location: "Las Vegas, NM",
     description:
-      "Conducted research on LLM benchmarking and evaluation methodologies. Developed reproducible evaluation frameworks for systematic large-scale model comparison.",
-    tags: ["LLM Evaluation", "NLP", "Benchmarking"],
+      "Applied HPC techniques and deep learning to design scalable, performance-efficient training and inference pipelines for modeling nanoscale material properties, including GPU-aware and hardware-conscious optimization.",
+    tags: ["HPC", "Deep Learning", "GPU Optimization"],
     icon: FlaskConical,
     accent: "#06b6d4",
   },
   {
-    title: "BSc in Computer Science",
-    org: "New Mexico Highlands University",
-    period: "2020 — 2024",
+    title: "Research Assistant — ML for Environmental Radiation Analysis",
+    org: "NMHU, Computer Science",
+    period: "Spring 2024 — 2025",
     location: "Las Vegas, NM",
     description:
-      "Graduated with focus on algorithms, software engineering, and foundational AI/ML coursework. Completed senior capstone in machine learning application development.",
-    tags: ["CS Fundamentals", "Algorithms", "Software Engineering"],
+      "Built supervised learning pipelines to classify background radiation from field-collected sensor data, reaching 96.9% cross-validation accuracy. Co-authored a peer-reviewed publication in ASRJETS based on this work.",
+    tags: ["Machine Learning", "Time-Series", "Publication"],
+    icon: FlaskConical,
+    accent: "#7c5cfc",
+  },
+  {
+    title: "MS in Software Systems Design",
+    org: "New Mexico Highlands University",
+    period: "Awarded Spring 2025",
+    location: "Las Vegas, NM",
+    description:
+      "Graduate research spanning AI-powered audio analysis and retrieval-augmented generation systems, including a thesis on an interactive music analyzer for musicians using AI.",
+    tags: ["RAG", "Audio ML", "Thesis"],
     icon: GraduationCap,
     accent: "#10b981",
+  },
+  {
+    title: "BEng in Electrical and Electronic Engineering",
+    org: "Federal University of Technology, Akure",
+    period: "Awarded Fall 2021",
+    location: "Akure, Nigeria",
+    description:
+      "Undergraduate research on real-time energy monitoring systems, embedded C programming, and circuit simulation for low-voltage distribution systems.",
+    tags: ["Embedded Systems", "Circuit Design"],
+    icon: GraduationCap,
+    accent: "#ef4444",
   },
 ];
 
 export default function Experience() {
-  const { theme } = useTheme();
+  const { theme, isDark } = useTheme();
 
   return (
     <section id="experience" className="py-32 px-6">
@@ -114,7 +137,7 @@ export default function Experience() {
                         </h3>
                         <p
                           className="font-medium text-sm mt-0.5"
-                          style={{ color: item.accent }}
+                          style={{ color: accentText(item.accent, isDark) }}
                         >
                           {item.org}
                         </p>

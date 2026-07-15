@@ -11,43 +11,10 @@ import Research from "../components/sections/Research";
 import Contact from "../components/sections/Contact";
 import Footer from "../components/layout/Footer";
 
-import { DARK, LIGHT } from "../../styles/theme";
-import { ThemeCtx } from "../../context/ThemeContext";
-
-// type ThemeMode = "light" | "dark" | "system";
+import useTheme from "../../hooks/useTheme";
 
 export default function App() {
-  // =========================
-  // THEME
-  // =========================
-
-  const [isDark, setIsDark] = useState(
-    window.matchMedia("(prefers-color-scheme: dark)").matches
-  );
-
-  // const [prefersDark, setPrefersDark] = useState(() =>
-  //   window.matchMedia("(prefers-color-scheme: dark)").matches
-  // );
-
- useEffect(() => {
-  const media = window.matchMedia("(prefers-color-scheme: dark)");
-
-  const handleChange = (e: MediaQueryListEvent) => {
-    setIsDark(e.matches);
-  };
-
-  media.addEventListener("change", handleChange);
-
-  return () => {
-    media.removeEventListener("change", handleChange);
-  };
-}, []);
-
-  const toggle = () => {
-  setIsDark(prev => !prev);
-};
-
-const theme = isDark ? DARK : LIGHT;
+  const { theme } = useTheme();
 
   // =========================
   // ACTIVE SECTION TRACKING
@@ -97,37 +64,28 @@ const theme = isDark ? DARK : LIGHT;
   // =========================
 
   return (
-    <ThemeCtx.Provider
-      value={{
-        theme,
-        isDark,
-        toggle,
+    <div
+      className="min-h-screen antialiased overflow-x-hidden"
+      style={{
+        backgroundColor: theme.bg,
+        color: theme.text,
+        transition: "background-color 0.4s ease, color 0.4s ease",
       }}
     >
-      <div
-        className="min-h-screen antialiased overflow-x-hidden"
-        style={{
-          backgroundColor: theme.bg,
-          color: theme.text,
-          transition:
-            "background-color 0.4s ease, color 0.4s ease",
-        }}
-      >
-        <Navbar active={activeSection} />
+      <Navbar active={activeSection} />
 
-        <main>
-          <Hero />
-          <About />
-          <Projects />
-          <Research />
-          <Skills />
-          <Experience />
-          {/* <Blog /> */}
-          <Contact />
-        </main>
+      <main>
+        <Hero />
+        <About />
+        <Projects />
+        <Research />
+        <Skills />
+        <Experience />
+        {/* <Blog /> */}
+        <Contact />
+      </main>
 
-        <Footer />
-      </div>
-    </ThemeCtx.Provider>
+      <Footer />
+    </div>
   );
 }

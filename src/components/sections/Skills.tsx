@@ -5,6 +5,7 @@ import {
   Globe,
   Database,
   FlaskConical,
+  Code2,
 } from "lucide-react";
 import { motion } from "motion/react";
 import useTheme from "../../../hooks/useTheme";
@@ -55,6 +56,10 @@ const SKILLS = [
       "Git",
       "CI/CD",
       "MLflow",
+      "CUDA",
+      "Parallel Computing",
+      "GPU Computing",
+      "Performance Optimization",
     ],
   },
   {
@@ -74,7 +79,20 @@ const SKILLS = [
       "PostgreSQL",
       "Redis",
       "REST / GraphQL",
+      "Flask",
+      "Django",
+      "Django REST",
+      "BeautifulSoup",
+      "MySQL",
+      "MongoDB",
+      "Pinecone",
     ],
+  },
+  {
+    category: "Programming Languages",
+    icon: Code2,
+    accent: "#4080ff",
+    items: ["Python", "C / C++", "Java", "TypeScript", "SQL", "CUDA"],
   },
   {
     category: "Research",

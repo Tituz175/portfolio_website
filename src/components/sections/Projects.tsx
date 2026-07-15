@@ -3,18 +3,9 @@ import useTheme from "../../../hooks/useTheme";
 import SectionLabel from "../layout/SectionLabel";
 import { Github, ExternalLink } from "lucide-react";
 import { fadeUp, stagger } from "../../../utils/animation";
+import { accentText } from "../../../utils/color";
 
 const PROJECTS = [
-  {
-    title: "Musicnalyzer",
-    description:
-      "ML-powered music analysis platform that extracts deep insights from audio signals and lyrical content using transformer-based NLP models and acoustic feature pipelines.",
-    tags: ["PyTorch", "Librosa", "HuggingFace", "React", "FastAPI"],
-    category: "ML System",
-    accent: "#4080ff",
-    github: "#",
-    demo: "#",
-  },
   {
     title: "Agentic Code Review System",
     description:
@@ -22,27 +13,17 @@ const PROJECTS = [
     tags: ["LangChain", "GPT-4", "Python", "FastAPI", "Docker"],
     category: "Agentic AI",
     accent: "#7c5cfc",
-    github: "#",
-    demo: "#",
+    github: "https://github.com/Tituz175/agentic-debugger",
+    demo: null,
   },
   {
-    title: "ExploreAI",
+    title: "Musicnalyzer",
     description:
-      "Conversational AI exploration system with semantic search, retrieval-augmented generation, and adaptive knowledge-base recommendations across multiple domains.",
-    tags: ["RAG", "LlamaIndex", "Next.js", "OpenAI", "Pinecone"],
-    category: "LLM Application",
+      "ML-powered music analysis platform that extracts deep insights from audio signals and lyrical content using transformer-based NLP models and acoustic feature pipelines.",
+    tags: ["PyTorch", "Librosa", "HuggingFace", "React", "FastAPI"],
+    category: "ML System",
     accent: "#06b6d4",
-    github: "#",
-    demo: "#",
-  },
-  {
-    title: "AI Door Assistant",
-    description:
-      "Edge-deployed computer vision system for intelligent access management, combining real-time object detection with a natural voice interface on embedded hardware.",
-    tags: ["OpenCV", "TensorFlow", "Raspberry Pi", "Python", "IoT"],
-    category: "Computer Vision",
-    accent: "#10b981",
-    github: "#",
+    github: "https://github.com/Tituz175/Musicnalyzer",
     demo: null,
   },
   {
@@ -51,14 +32,34 @@ const PROJECTS = [
       "Comprehensive evaluation framework for large language models across reasoning, coding, and domain-specific tasks, with a reproducible statistical analysis pipeline.",
     tags: ["HuggingFace", "PyTorch", "W&B", "Python", "Research"],
     category: "Research",
+    accent: "#4080ff",
+    github: "https://github.com/Tituz175/llm-inference-benchmark",
+    demo: null,
+  },
+  {
+    title: "ExploreAI",
+    description:
+      "Conversational AI exploration system with semantic search, retrieval-augmented generation, and adaptive knowledge-base recommendations across multiple domains.",
+    tags: ["RAG", "LlamaIndex", "Next.js", "OpenAI", "Pinecone"],
+    category: "LLM Application",
     accent: "#f59e0b",
-    github: "#",
+    github: null,
+    demo: null,
+  },
+  {
+    title: "AI Door Assistant",
+    description:
+      "Edge-deployed computer vision system for intelligent access management, combining real-time object detection with a natural voice interface on embedded hardware.",
+    tags: ["OpenCV", "TensorFlow", "Raspberry Pi", "Python", "IoT"],
+    category: "Computer Vision",
+    accent: "#10b981",
+    github: "https://github.com/Tituz175/Door-assistant",
     demo: null,
   },
 ];
 
 export default function Projects() {
-  const { theme } = useTheme();
+  const { theme, isDark } = useTheme();
 
   return (
     <section id="projects" className="py-32 px-6">
@@ -104,7 +105,7 @@ export default function Projects() {
                 }}
               />
               <div
-                className="absolute -top-8 -right-8 w-24 h-24 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                className="absolute -top-8 -right-8 w-24 h-24 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
                 style={{
                   background: `radial-gradient(circle,${p.accent}18 0%,transparent 70%)`,
                   filter: "blur(16px)",
@@ -116,7 +117,7 @@ export default function Projects() {
                   className="text-xs px-2.5 py-1 rounded-full border"
                   style={{
                     fontFamily: "var(--font-mono)",
-                    color: p.accent,
+                    color: accentText(p.accent, isDark),
                     borderColor: `${p.accent}30`,
                     backgroundColor: `${p.accent}08`,
                     letterSpacing: "0.06em",
@@ -125,23 +126,29 @@ export default function Projects() {
                   {p.category}
                 </span>
                 <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                  <a
-                    href={p.github}
-                    className="p-1.5 rounded-lg transition-colors duration-200"
-                    style={{ color: theme.textFaint }}
-                    aria-label="GitHub"
-                    onMouseEnter={(e) =>
-                      (e.currentTarget.style.color = theme.text)
-                    }
-                    onMouseLeave={(e) =>
-                      (e.currentTarget.style.color = theme.textFaint)
-                    }
-                  >
-                    <Github size={14} />
-                  </a>
+                  {p.github && (
+                    <a
+                      href={p.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-1.5 rounded-lg transition-colors duration-200"
+                      style={{ color: theme.textFaint }}
+                      aria-label="GitHub"
+                      onMouseEnter={(e) =>
+                        (e.currentTarget.style.color = theme.text)
+                      }
+                      onMouseLeave={(e) =>
+                        (e.currentTarget.style.color = theme.textFaint)
+                      }
+                    >
+                      <Github size={14} />
+                    </a>
+                  )}
                   {p.demo && (
                     <a
                       href={p.demo}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="p-1.5 rounded-lg transition-colors duration-200"
                       style={{ color: theme.textFaint }}
                       aria-label="Live demo"

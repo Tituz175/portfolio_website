@@ -9,9 +9,10 @@ import {
 import useTheme from "../../../hooks/useTheme";
 import SectionLabel from "../layout/SectionLabel";
 import { fadeUp, stagger } from "../../../utils/animation";
+import { accentText } from "../../../utils/color";
 
 export default function About() {
-  const { theme } = useTheme();
+  const { theme, isDark } = useTheme();
 
   const interests = [
     "Large Language Models",
@@ -22,13 +23,19 @@ export default function About() {
     "AI Safety",
     "Information Retrieval",
     "Multimodal Learning",
+    "Machine Learning Systems",
+    "High-Performance Computing",
+    "Efficient LLM Training & Inference",
+    "Retrieval-Augmented Generation",
+    "GPU-Aware Optimization",
+    "Memory & Compute Optimization",
   ];
 
   const stats = [
     { value: "5+", label: "Projects Shipped", color: "#4080ff" },
-    { value: "3+", label: "Years Research", color: "#7c5cfc" },
-    { value: "2+", label: "Papers in Progress", color: "#06b6d4" },
-    { value: "6+", label: "ML Frameworks", color: "#10b981" },
+    { value: "5+", label: "Years Research", color: "#7c5cfc" },
+    { value: "5", label: "Publications", color: "#06b6d4" },
+    { value: "5+", label: "ML Frameworks", color: "#10b981" },
   ];
 
   return (
@@ -51,42 +58,47 @@ export default function About() {
               className="text-lg leading-relaxed"
               style={{ color: theme.textSub }}
             >
-              {"I'm"} Tobi Oyekanmi — an AI engineer, machine learning
-              researcher, and software developer with a deep focus on building
-              intelligent systems that push the boundaries of modern AI.
+              {"I'm"} Tobi Oyekanmi — an AI engineer and machine learning
+              researcher with a deep focus on building intelligent systems that
+              push the boundaries of modern AI, from production ML pipelines to
+              the systems research that makes large-scale AI possible.
             </motion.p>
             <motion.p
               {...stagger(1)}
               className="leading-relaxed"
               style={{ color: theme.textMuted }}
             >
-              My work lives at the intersection of research and engineering: I
-              design production-grade ML systems while investigating the
-              fundamental questions that drive AI forward — how we evaluate
-              models rigorously, how we make LLMs reliable agents, and how we
-              build language understanding that generalizes beyond benchmarks.
+              My research centers on efficient large-scale model training and
+              inference — GPU-aware optimization, numerical linear algebra, and
+              system-level performance work for distributed AI workloads —
+              alongside applied engineering work in retrieval-augmented
+              generation, medical imaging, and environmental sensor analysis
+              using machine learning.
             </motion.p>
             <motion.p
               {...stagger(2)}
               className="leading-relaxed"
               style={{ color: theme.textMuted }}
             >
-              This Fall, {"I'll"} be joining the University of Delaware as an
-              incoming PhD student in Computer Science, deepening my research in
-              NLP and AI systems. I hold a BSc in Computer Science from New
-              Mexico Highlands University.
+              {"I'm"} currently completing an MS in Computer Science at New
+              Mexico Highlands University (expected Fall 2026), after earning
+              an MS in Software Systems Design there in 2025 and a BEng in
+              Electrical and Electronic Engineering from the Federal University
+              of Technology, Akure, Nigeria. {"I'm"} open to both PhD programs
+              continuing this research and engineering roles building
+              production ML systems.
             </motion.p>
 
             <motion.div {...stagger(3)} className="flex flex-wrap gap-5 pt-4">
               {[
                 {
                   icon: MapPin,
-                  text: "Newark, DE (incoming)",
+                  text: "Las Vegas, NM",
                   color: "#4080ff",
                 },
                 {
                   icon: GraduationCap,
-                  text: "PhD — University of Delaware",
+                  text: "MS Computer Science — NMHU",
                   color: "#7c5cfc",
                 },
               ].map(({ icon: Icon, text, color }) => (
@@ -103,13 +115,21 @@ export default function About() {
 
             <motion.div {...stagger(4)} className="flex gap-3 pt-2">
               {[
-                { icon: Github, href: "https://github.com", label: "GitHub" },
+                {
+                  icon: Github,
+                  href: "https://github.com/Tituz175",
+                  label: "GitHub",
+                },
                 {
                   icon: Linkedin,
-                  href: "https://linkedin.com",
+                  href: "https://www.linkedin.com/in/tobioyekanmi/",
                   label: "LinkedIn",
                 },
-                { icon: BookOpen, href: "#", label: "Google Scholar" },
+                {
+                  icon: BookOpen,
+                  href: "https://www.researchgate.net/profile/Tobi-Oyekanmi-2?ev=hdr_xprf",
+                  label: "ResearchGate",
+                },
               ].map(({ icon: Icon, href, label }) => (
                 <a
                   key={label}
@@ -190,7 +210,10 @@ export default function About() {
                 >
                   <div
                     className="text-3xl font-black mb-1"
-                    style={{ fontFamily: "var(--font-display)", color }}
+                    style={{
+                      fontFamily: "var(--font-display)",
+                      color: accentText(color, isDark),
+                    }}
                   >
                     {value}
                   </div>

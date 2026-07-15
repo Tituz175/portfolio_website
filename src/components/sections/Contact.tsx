@@ -19,7 +19,7 @@ export default function Contact() {
         />
 
         <motion.div {...fadeUp} className="text-center mb-12">
-          <SectionLabel index="07" label="Contact" color="#4080ff" />
+          <SectionLabel index="06" label="Contact" color="#4080ff" />
           <h2
             className="text-5xl md:text-7xl font-black tracking-tight mb-6"
             style={{ fontFamily: "var(--font-display)", color: theme.text }}
@@ -41,7 +41,8 @@ export default function Contact() {
           className="flex flex-wrap items-center justify-center gap-3 mb-16"
         >
           <a
-            href="mailto:tobi@example.com"
+            href="mailto:tobititus.oyekanmi@gmail.com"
+            target="_blank"
             className="flex items-center gap-2.5 px-7 py-3.5 rounded-full text-white font-medium transition-all duration-200"
             style={{ backgroundColor: "#4080ff" }}
             onMouseEnter={(e) => {
@@ -85,7 +86,7 @@ export default function Contact() {
             <a
               key={label}
               href={href}
-              target={href.startsWith("http") ? "_blank" : undefined}
+              target={"_blank"}
               rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
               className="flex flex-col items-center gap-2.5 group"
             >

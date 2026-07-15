@@ -1,4 +1,5 @@
 import useTheme from "../../../hooks/useTheme";
+import { accentText } from "../../../utils/color";
 
 export default function SectionLabel({
   index,
@@ -9,14 +10,14 @@ export default function SectionLabel({
   label: string;
   color: string;
 }) {
-  const { theme } = useTheme();
+  const { theme, isDark } = useTheme();
   return (
     <div className="flex items-center gap-3 mb-4">
       <span
         style={{
           fontFamily: "var(--font-mono)",
           fontSize: "0.9rem",
-          color,
+          color: accentText(color, isDark),
           letterSpacing: "0.18em",
         }}
       >

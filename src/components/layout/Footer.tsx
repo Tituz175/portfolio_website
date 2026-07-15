@@ -30,7 +30,7 @@ export default function Footer() {
             color: theme.textDim,
           }}
         >
-          AI Engineer · ML Researcher · PhD Candidate — University of Delaware
+          AI Engineer · ML Researcher · MS Candidate — New Mexico Highlands University
         </p>
       </div>
     </footer>
