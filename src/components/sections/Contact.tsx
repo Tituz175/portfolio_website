@@ -8,7 +8,7 @@ export default function Contact() {
   const { theme } = useTheme();
 
   return (
-    <section id="contact" className="py-32 px-6">
+    <section id="contact" className="py-32 px-6 scroll-mt-24">
       <div className="max-w-3xl mx-auto">
         <div
           className="h-px w-full max-w-xs mx-auto mb-20"

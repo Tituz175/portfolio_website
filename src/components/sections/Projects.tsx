@@ -62,7 +62,7 @@ export default function Projects() {
   const { theme, isDark } = useTheme();
 
   return (
-    <section id="projects" className="py-32 px-6">
+    <section id="projects" className="py-32 px-6 scroll-mt-24">
       <div className="max-w-7xl mx-auto">
         <motion.div {...fadeUp} className="mb-16">
           <SectionLabel index="02" label="Projects" color="#7c5cfc" />

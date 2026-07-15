@@ -39,7 +39,7 @@ export default function About() {
   ];
 
   return (
-    <section id="about" className="py-32 px-6">
+    <section id="about" className="py-32 px-6 scroll-mt-24">
       <div className="max-w-7xl mx-auto">
         <motion.div {...fadeUp} className="mb-16">
           <SectionLabel index="01" label="About" color="#4080ff" />

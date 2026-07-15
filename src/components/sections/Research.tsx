@@ -93,7 +93,7 @@ export default function Research() {
   const { theme } = useTheme();
 
   return (
-    <section id="research" className="py-32 px-6">
+    <section id="research" className="py-32 px-6 scroll-mt-24">
       <div className="max-w-7xl mx-auto">
         <motion.div {...fadeUp} className="mb-16">
           <SectionLabel index="03" label="Research" color="#06b6d4" />

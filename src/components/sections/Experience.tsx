@@ -78,7 +78,7 @@ export default function Experience() {
   const { theme, isDark } = useTheme();
 
   return (
-    <section id="experience" className="py-32 px-6">
+    <section id="experience" className="py-32 px-6 scroll-mt-24">
       <div className="max-w-4xl mx-auto">
         <motion.div {...fadeUp} className="mb-16">
           <SectionLabel index="05" label="Experience" color="#f59e0b" />

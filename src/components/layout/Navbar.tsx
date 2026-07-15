@@ -169,7 +169,7 @@ export default function Navbar({ active }: NavbarProps) {
       {/* Mobile Drawer */}
       {open && (
         <div
-          className="md:hidden absolute top-full inset-x-0 py-6 px-6 border-b"
+          className="md:hidden absolute top-full inset-x-0 min-h-screen py-6 px-6 border-b"
           style={{
             backgroundColor: theme.mobileBg,
             backdropFilter: "blur(24px)",
