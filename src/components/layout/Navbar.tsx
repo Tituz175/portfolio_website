@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { motion } from "motion/react";
 import useTheme from "../../../hooks/useTheme";
 import ThemeToggle from "../ui/ThemeToggle";
 import { ChevronRight, Menu, X } from "lucide-react";
@@ -105,11 +106,13 @@ export default function Navbar({ active }: NavbarProps) {
                 {label}
 
                 {isActive && (
-                  <span
+                  <motion.span
+                    layoutId="nav-underline"
                     className="absolute left-0 right-0 -bottom-2 h-px"
                     style={{
                       backgroundColor: "#4080ff",
                     }}
+                    transition={{ type: "spring", stiffness: 380, damping: 32 }}
                   />
                 )}
               </a>

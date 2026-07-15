@@ -1,3 +1,4 @@
+import { motion } from "motion/react";
 import useTheme from "../../../hooks/useTheme";
 import { accentText } from "../../../utils/color";
 
@@ -23,9 +24,13 @@ export default function SectionLabel({
       >
         {index}
       </span>
-      <div
+      <motion.div
         className="h-px w-8"
-        style={{ backgroundColor: color, opacity: 0.4 }}
+        style={{ backgroundColor: color, opacity: 0.4, transformOrigin: "left" }}
+        initial={{ scaleX: 0 }}
+        whileInView={{ scaleX: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5, delay: 0.3, ease: "easeOut" }}
       />
       <span
         style={{

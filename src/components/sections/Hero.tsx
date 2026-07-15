@@ -1,5 +1,12 @@
+import { useEffect } from "react";
 import useTheme from "../../../hooks/useTheme";
-import { motion } from "motion/react";
+import {
+  motion,
+  animate,
+  useMotionValue,
+  useMotionTemplate,
+  useReducedMotion,
+} from "motion/react";
 import { heroAnim } from "../../../utils/animation";
 import { scrollTo } from "../../../utils/scroll";
 import {
@@ -12,11 +19,33 @@ import {
 } from "lucide-react";
 
 function HeroBg() {
-  const { theme } = useTheme();
+  const { theme, isDark } = useTheme();
+  const shouldReduceMotion = useReducedMotion();
 
-  const { isDark } = useTheme();
+  const spotX = useMotionValue(30);
+  const spotY = useMotionValue(45);
+  const spotColor = isDark ? "rgba(64,128,255,0.55)" : "rgba(64,128,255,0.3)";
+  const spotlightBg = useMotionTemplate`radial-gradient(circle 480px at ${spotX}% ${spotY}%, ${spotColor} 0%, transparent 70%)`;
 
-  console.log("Hero theme:", isDark);
+  useEffect(() => {
+    if (shouldReduceMotion) return;
+
+    const xControls = animate(spotX, [15, 82, 35, 88, 15], {
+      duration: 13,
+      repeat: Infinity,
+      ease: "easeInOut",
+    });
+    const yControls = animate(spotY, [30, 68, 90, 25, 30], {
+      duration: 16,
+      repeat: Infinity,
+      ease: "easeInOut",
+    });
+
+    return () => {
+      xControls.stop();
+      yControls.stop();
+    };
+  }, [shouldReduceMotion, spotX, spotY]);
 
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none select-none">
@@ -69,6 +98,12 @@ function HeroBg() {
         </defs>
         <rect width="100%" height="100%" fill="url(#pg)" />
       </svg>
+      {!shouldReduceMotion && (
+        <motion.div
+          className="absolute inset-0"
+          style={{ background: spotlightBg }}
+        />
+      )}
       <div
         className="absolute inset-0"
         style={{
@@ -80,7 +115,9 @@ function HeroBg() {
 }
 
 export default function Hero() {
-  const { theme } = useTheme();
+  const { theme, isDark } = useTheme();
+  const shouldReduceMotion = useReducedMotion();
+
   return (
     <section
       id="hero"
@@ -264,12 +301,27 @@ export default function Hero() {
         >
           SCROLL
         </span>
-        <div
-          className="w-px h-12"
-          style={{
-            background: `linear-gradient(to bottom, ${theme.textVeryFaint}, transparent)`,
-          }}
-        />
+        <div className="relative w-px h-12 overflow-hidden">
+          <div
+            className="absolute inset-0"
+            style={{
+              background: `linear-gradient(to bottom, ${theme.textVeryFaint}, transparent)`,
+            }}
+          />
+          {!shouldReduceMotion && (
+            <motion.div
+              className="absolute inset-x-0 top-0"
+              style={{
+                height: "60%",
+                background: isDark
+                  ? "linear-gradient(to bottom, transparent, #4080ff, transparent)"
+                  : `linear-gradient(to bottom, transparent, ${theme.textSub}, transparent)`,
+              }}
+              animate={{ y: ["-100%", "220%"] }}
+              transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+            />
+          )}
+        </div>
       </motion.div>
     </section>
   );
