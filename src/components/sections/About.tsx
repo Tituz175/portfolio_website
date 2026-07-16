@@ -7,36 +7,20 @@ import {
   BookOpen,
 } from "lucide-react";
 import useTheme from "../../../hooks/useTheme";
+import useSiteContent from "../../../hooks/useSiteContent";
 import SectionLabel from "../layout/SectionLabel";
 import { fadeUp, stagger } from "../../../utils/animation";
 import { accentText } from "../../../utils/color";
 
 export default function About() {
   const { theme, isDark } = useTheme();
+  const { content, loading } = useSiteContent();
+  const about = content?.about;
 
-  const interests = [
-    "Large Language Models",
-    "Agentic AI Systems",
-    "NLP & Semantics",
-    "ML Evaluation",
-    "Neural Architectures",
-    "AI Safety",
-    "Information Retrieval",
-    "Multimodal Learning",
-    "Machine Learning Systems",
-    "High-Performance Computing",
-    "Efficient LLM Training & Inference",
-    "Retrieval-Augmented Generation",
-    "GPU-Aware Optimization",
-    "Memory & Compute Optimization",
-  ];
+  if (loading || !about) return null;
 
-  const stats = [
-    { value: "5+", label: "Projects Shipped", color: "#4080ff" },
-    { value: "5+", label: "Years Research", color: "#7c5cfc" },
-    { value: "5", label: "Publications", color: "#06b6d4" },
-    { value: "5+", label: "ML Frameworks", color: "#10b981" },
-  ];
+  const interests = about.interests;
+  const stats = about.stats as { value: string; label: string; color: string }[];
 
   return (
     <section id="about" className="py-32 px-6 scroll-mt-24">
@@ -58,47 +42,33 @@ export default function About() {
               className="text-lg leading-relaxed"
               style={{ color: theme.textSub }}
             >
-              {"I'm"} Tobi Oyekanmi — an AI engineer and machine learning
-              researcher with a deep focus on building intelligent systems that
-              push the boundaries of modern AI, from production ML pipelines to
-              the systems research that makes large-scale AI possible.
+              {about.bioP1}
             </motion.p>
             <motion.p
               {...stagger(1)}
               className="leading-relaxed"
               style={{ color: theme.textMuted }}
             >
-              My research centers on efficient large-scale model training and
-              inference — GPU-aware optimization, numerical linear algebra, and
-              system-level performance work for distributed AI workloads —
-              alongside applied engineering work in retrieval-augmented
-              generation, medical imaging, and environmental sensor analysis
-              using machine learning.
+              {about.bioP2}
             </motion.p>
             <motion.p
               {...stagger(2)}
               className="leading-relaxed"
               style={{ color: theme.textMuted }}
             >
-              {"I'm"} currently completing an MS in Computer Science at New
-              Mexico Highlands University (expected Fall 2026), after earning
-              an MS in Software Systems Design there in 2025 and a BEng in
-              Electrical and Electronic Engineering from the Federal University
-              of Technology, Akure, Nigeria. {"I'm"} open to both PhD programs
-              continuing this research and engineering roles building
-              production ML systems.
+              {about.bioP3}
             </motion.p>
 
             <motion.div {...stagger(3)} className="flex flex-wrap gap-5 pt-4">
               {[
                 {
                   icon: MapPin,
-                  text: "Las Vegas, NM",
+                  text: about.location,
                   color: "#4080ff",
                 },
                 {
                   icon: GraduationCap,
-                  text: "MS Computer Science — NMHU",
+                  text: about.degreeChip,
                   color: "#7c5cfc",
                 },
               ].map(({ icon: Icon, text, color }) => (

@@ -1,116 +1,16 @@
-import {
-  Brain,
-  MessageSquare,
-  Cpu,
-  Globe,
-  Database,
-  FlaskConical,
-  Code2,
-} from "lucide-react";
 import { motion } from "motion/react";
 import useTheme from "../../../hooks/useTheme";
+import useSiteContent from "../../../hooks/useSiteContent";
 import SectionLabel from "../layout/SectionLabel";
 import { fadeUp, stagger } from "../../../utils/animation";
-
-const SKILLS = [
-  {
-    category: "AI / ML",
-    icon: Brain,
-    accent: "#4080ff",
-    items: [
-      "PyTorch",
-      "TensorFlow",
-      "HuggingFace",
-      "Scikit-learn",
-      "LangChain",
-      "LlamaIndex",
-      "OpenAI API",
-      "W&B",
-    ],
-  },
-  {
-    category: "NLP",
-    icon: MessageSquare,
-    accent: "#7c5cfc",
-    items: [
-      "Transformers",
-      "BERT / GPT",
-      "Text Classification",
-      "NER",
-      "Semantic Search",
-      "RAG",
-      "Prompt Engineering",
-      "Fine-tuning",
-    ],
-  },
-  {
-    category: "Systems",
-    icon: Cpu,
-    accent: "#06b6d4",
-    items: [
-      "Linux",
-      "Docker",
-      "Kubernetes",
-      "AWS",
-      "GCP",
-      "Git",
-      "CI/CD",
-      "MLflow",
-      "CUDA",
-      "Parallel Computing",
-      "GPU Computing",
-      "Performance Optimization",
-    ],
-  },
-  {
-    category: "Frontend",
-    icon: Globe,
-    accent: "#10b981",
-    items: ["React", "Next.js", "TypeScript", "Tailwind CSS", "Three.js"],
-  },
-  {
-    category: "Backend",
-    icon: Database,
-    accent: "#f59e0b",
-    items: [
-      "Python",
-      "FastAPI",
-      "Node.js",
-      "PostgreSQL",
-      "Redis",
-      "REST / GraphQL",
-      "Flask",
-      "Django",
-      "Django REST",
-      "BeautifulSoup",
-      "MySQL",
-      "MongoDB",
-      "Pinecone",
-    ],
-  },
-  {
-    category: "Programming Languages",
-    icon: Code2,
-    accent: "#4080ff",
-    items: ["Python", "C / C++", "Java", "TypeScript", "SQL", "CUDA"],
-  },
-  {
-    category: "Research",
-    icon: FlaskConical,
-    accent: "#ef4444",
-    items: [
-      "LaTeX",
-      "Jupyter",
-      "Statistical Analysis",
-      "Experiment Design",
-      "Literature Review",
-      "Academic Writing",
-    ],
-  },
-];
+import { getIcon } from "../../../utils/icons";
 
 export default function Skills() {
   const { theme } = useTheme();
+  const { content, loading } = useSiteContent();
+  const SKILLS = content?.skills ?? [];
+
+  if (loading || SKILLS.length === 0) return null;
 
   return (
     <section id="skills" className="py-32 px-6 scroll-mt-24">
@@ -127,7 +27,7 @@ export default function Skills() {
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {SKILLS.map((group, i) => {
-            const Icon = group.icon;
+            const Icon = getIcon(group.icon);
             return (
               <motion.div
                 key={group.category}

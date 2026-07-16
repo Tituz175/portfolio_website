@@ -1,65 +1,17 @@
 import { motion } from "motion/react";
 import useTheme from "../../../hooks/useTheme";
+import useSiteContent from "../../../hooks/useSiteContent";
 import SectionLabel from "../layout/SectionLabel";
 import { Github, ExternalLink } from "lucide-react";
 import { fadeUp, stagger } from "../../../utils/animation";
 import { accentText } from "../../../utils/color";
 
-const PROJECTS = [
-  {
-    title: "Agentic Code Review System",
-    description:
-      "Multi-agent LLM orchestration framework for automated code review and intelligent debugging, featuring reasoning chains and structured tool-use capabilities.",
-    tags: ["LangChain", "GPT-4", "Python", "FastAPI", "Docker"],
-    category: "Agentic AI",
-    accent: "#7c5cfc",
-    github: "https://github.com/Tituz175/agentic-debugger",
-    demo: null,
-  },
-  {
-    title: "Musicnalyzer",
-    description:
-      "ML-powered music analysis platform that extracts deep insights from audio signals and lyrical content using transformer-based NLP models and acoustic feature pipelines.",
-    tags: ["PyTorch", "Librosa", "HuggingFace", "React", "FastAPI"],
-    category: "ML System",
-    accent: "#06b6d4",
-    github: "https://github.com/Tituz175/Musicnalyzer",
-    demo: null,
-  },
-  {
-    title: "LLM Benchmarking Study",
-    description:
-      "Comprehensive evaluation framework for large language models across reasoning, coding, and domain-specific tasks, with a reproducible statistical analysis pipeline.",
-    tags: ["HuggingFace", "PyTorch", "W&B", "Python", "Research"],
-    category: "Research",
-    accent: "#4080ff",
-    github: "https://github.com/Tituz175/llm-inference-benchmark",
-    demo: null,
-  },
-  {
-    title: "ExploreAI",
-    description:
-      "Conversational AI exploration system with semantic search, retrieval-augmented generation, and adaptive knowledge-base recommendations across multiple domains.",
-    tags: ["RAG", "LlamaIndex", "Next.js", "OpenAI", "Pinecone"],
-    category: "LLM Application",
-    accent: "#f59e0b",
-    github: null,
-    demo: null,
-  },
-  {
-    title: "AI Door Assistant",
-    description:
-      "Edge-deployed computer vision system for intelligent access management, combining real-time object detection with a natural voice interface on embedded hardware.",
-    tags: ["OpenCV", "TensorFlow", "Raspberry Pi", "Python", "IoT"],
-    category: "Computer Vision",
-    accent: "#10b981",
-    github: "https://github.com/Tituz175/Door-assistant",
-    demo: null,
-  },
-];
-
 export default function Projects() {
   const { theme, isDark } = useTheme();
+  const { content, loading } = useSiteContent();
+  const PROJECTS = content?.projects ?? [];
+
+  if (loading || PROJECTS.length === 0) return null;
 
   return (
     <section id="projects" className="py-32 px-6 scroll-mt-24">

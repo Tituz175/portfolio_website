@@ -1,0 +1,79 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Project {
+  id          Int     @id @default(autoincrement())
+  order       Int
+  title       String
+  description String
+  tags        String[]
+  category    String
+  accent      String
+  github      String?
+  demo        String?
+}
+
+model ResearchArea {
+  id          Int    @id @default(autoincrement())
+  order       Int
+  title       String
+  description String
+  icon        String
+  color       String
+}
+
+model Publication {
+  id    Int    @id @default(autoincrement())
+  order Int
+  title String
+  venue String
+  type  String
+}
+
+model SkillCategory {
+  id       Int      @id @default(autoincrement())
+  order    Int
+  category String
+  icon     String
+  accent   String
+  items    String[]
+}
+
+model ExperienceEntry {
+  id          Int      @id @default(autoincrement())
+  order       Int
+  title       String
+  org         String
+  period      String
+  location    String
+  description String
+  tags        String[]
+  icon        String
+  accent      String
+}
+
+model EducationEntry {
+  id     Int    @id @default(autoincrement())
+  order  Int
+  degree String
+  org    String
+  period String
+}
+
+// Singleton row (id always 1) holding the About section's bio/interests/stats.
+model AboutContent {
+  id         Int      @id @default(1)
+  bioP1      String
+  bioP2      String
+  bioP3      String
+  location   String
+  degreeChip String
+  interests  String[]
+  stats      Json
+}

@@ -27,3 +27,6 @@ pnpm-debug.log*
 
 # Vite
 .vite/
+.vercel
+.env*
+!.env.example

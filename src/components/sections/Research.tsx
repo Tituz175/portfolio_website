@@ -1,96 +1,18 @@
 import { motion } from "motion/react";
 import useTheme from "../../../hooks/useTheme";
+import useSiteContent from "../../../hooks/useSiteContent";
 import SectionLabel from "../layout/SectionLabel";
 import { fadeUp, stagger } from "../../../utils/animation";
-import {
-  Activity,
-  Cpu,
-  Database,
-  FileText,
-  MessageSquare,
-  Server,
-  Star,
-} from "lucide-react";
-
-const RESEARCH_AREAS = [
-  {
-    title: "LLM Evaluation & Benchmarking",
-    description:
-      "Designing rigorous evaluation frameworks that go beyond standard benchmarks to capture real-world model capabilities and failure modes.",
-    icon: Star,
-    color: "#4080ff",
-  },
-  {
-    title: "Agentic AI Systems",
-    description:
-      "Building and studying multi-agent architectures that can reason, plan, and execute complex multi-step tasks with minimal human supervision.",
-    icon: Cpu,
-    color: "#7c5cfc",
-  },
-  {
-    title: "Natural Language Processing",
-    description:
-      "Semantic understanding, information retrieval, and language model adaptation for robust domain-specific applications and knowledge work.",
-    icon: MessageSquare,
-    color: "#06b6d4",
-  },
-  {
-    title: "AI Systems & Infrastructure",
-    description:
-      "Scalable ML infrastructure, production model deployment pipelines, and the systems engineering required to make research-grade AI reliable.",
-    icon: Database,
-    color: "#10b981",
-  },
-  {
-    title: "High-Performance ML Systems",
-    description:
-      "GPU-aware optimization, numerical linear algebra, and system-level performance work for efficient large-scale model training and inference.",
-    icon: Server,
-    color: "#f59e0b",
-  },
-  {
-    title: "Applied Deep Learning",
-    description:
-      "CNN-based diagnostic models for medical imaging and sensor-driven classification, taken from research to deployable, evaluated systems.",
-    icon: Activity,
-    color: "#ef4444",
-  },
-];
-
-const PUBLICATIONS = [
-  {
-    title: "Simulation Prediction of Background Radiation Using Machine Learning",
-    venue: "with P. Adigun, A. Adeniyi",
-    type: "Journal Article",
-  },
-  {
-    title:
-      "Detection and Interpretation of X-Ray Scans for the Presence of Pneumonia Using Convolutional Neural Network",
-    venue: "with P. Adigun, A. Adeniyi",
-    type: "Journal Article",
-  },
-  {
-    title:
-      "Deep Learning-based Diagnosis of Brain Cancer Using Convolutional Neural Networks on MRI Scans: A Comparative Study of Model Architectures and Tumor Classification Accuracy",
-    venue: "with P. Adigun, A. Adeniyi, N. Azeez",
-    type: "Journal Article",
-  },
-  {
-    title:
-      "Design and Evaluation of a Convolutional Neural Network Model for Automated Detection of Diabetic Retinopathy using Retinal Fundus Photographs",
-    venue: "with P. Adigun, A. Adeniyi",
-    type: "Journal Article",
-  },
-  {
-    title:
-      "Application of Artificial Intelligence Models in Teletherapy: A Review of Efficacy and Ethical Implications",
-    venue: "with A. Adeniyi, P. Adigun, V. Kolawole",
-    type: "Review Article",
-  },
-];
+import { FileText } from "lucide-react";
+import { getIcon } from "../../../utils/icons";
 
 export default function Research() {
   const { theme } = useTheme();
+  const { content, loading } = useSiteContent();
+  const RESEARCH_AREAS = content?.research.areas ?? [];
+  const PUBLICATIONS = content?.research.publications ?? [];
+
+  if (loading || RESEARCH_AREAS.length === 0) return null;
 
   return (
     <section id="research" className="py-32 px-6 scroll-mt-24">
@@ -111,7 +33,7 @@ export default function Research() {
 
         <div className="grid md:grid-cols-2 gap-4 mb-16">
           {RESEARCH_AREAS.map((area, i) => {
-            const Icon = area.icon;
+            const Icon = getIcon(area.icon);
             return (
               <motion.div
                 key={area.title}

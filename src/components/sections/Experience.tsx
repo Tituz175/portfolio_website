@@ -1,99 +1,19 @@
 import { motion } from "motion/react";
 import useTheme from "../../../hooks/useTheme";
+import useSiteContent from "../../../hooks/useSiteContent";
 import SectionLabel from "../layout/SectionLabel";
 import { fadeUp, stagger } from "../../../utils/animation";
 import { accentText } from "../../../utils/color";
-import { Briefcase, FlaskConical, MapPin } from "lucide-react";
-
-const EXPERIENCE = [
-  {
-    title: "Graduate Research & Teaching Assistant",
-    org: "NMHU, Department of Computer Science",
-    period: "Jan 2023 — Present",
-    location: "Las Vegas, NM",
-    description:
-      "Taught and supported courses spanning Java programming, Unix systems, artificial intelligence, and software engineering, while running Git, Linux, and CI/CD training sessions for students. Also designed semantic retrieval pipelines with LangChain and vector databases, and built OpenCV-based computer vision workflows for real-time monitoring applications.",
-    tags: ["Teaching", "RAG", "Computer Vision", "CI/CD"],
-    icon: Briefcase,
-    accent: "#f59e0b",
-  },
-  {
-    title: "NSF BioPACIFIC MIP PREM Research Program",
-    org: "NMHU, Computer Science",
-    period: "Summer 2025",
-    location: "Las Vegas, NM",
-    description:
-      "Applied HPC techniques and deep learning to design scalable, performance-efficient training and inference pipelines for modeling nanoscale material properties, including GPU-aware and hardware-conscious optimization.",
-    tags: ["HPC", "Deep Learning", "GPU Optimization"],
-    icon: FlaskConical,
-    accent: "#06b6d4",
-  },
-  {
-    title: "Research Assistant — ML for Environmental Radiation Analysis",
-    org: "NMHU, Computer Science",
-    period: "Spring 2024 — 2025",
-    location: "Las Vegas, NM",
-    description:
-      "Built supervised learning pipelines to classify background radiation from field-collected sensor data, reaching 96.9% cross-validation accuracy. Co-authored a peer-reviewed publication in ASRJETS based on this work.",
-    tags: ["Machine Learning", "Time-Series", "Publication"],
-    icon: FlaskConical,
-    accent: "#7c5cfc",
-  },
-  {
-    title: "Software Engineering Assistant",
-    org: "NMHU Police Department",
-    period: "May 2024 — Aug 2024",
-    location: "Las Vegas, NM",
-    description:
-      "Built an automated certificate-management system in Python, SQL, and Microsoft Access to track expiring compliance records, with monitoring and alerting workflows that cut manual auditing overhead.",
-    tags: ["Python", "SQL", "Automation"],
-    icon: Briefcase,
-    accent: "#06b6d4",
-  },
-  {
-    title: "Software Engineer Intern",
-    org: "alx_africa",
-    period: "Jan 2023 — Apr 2024",
-    location: "Remote",
-    description:
-      "Designed and shipped scalable RESTful APIs with Flask, Node.js, Express, and SQLAlchemy for multi-user applications, with MySQL and MongoDB data layers and JWT-based auth — improving backend processing efficiency by roughly 30% through API and query optimization.",
-    tags: ["REST APIs", "MySQL/MongoDB", "Auth"],
-    icon: Briefcase,
-    accent: "#4080ff",
-  },
-  {
-    title: "Assistant Software Engineering Instructor",
-    org: "SQI College of ICT",
-    period: "Nov 2021 — Nov 2022",
-    location: "Ibadan, Nigeria",
-    description:
-      "Taught foundational web development (HTML, CSS, JavaScript) and introductory programming, coordinating coding sessions and mentoring students through hands-on project work.",
-    tags: ["Teaching", "Web Fundamentals"],
-    icon: Briefcase,
-    accent: "#f59e0b",
-  },
-];
-
-const EDUCATION = [
-  {
-    degree: "MS in Computer Science",
-    org: "New Mexico Highlands University",
-    period: "Expected Fall 2026",
-  },
-  {
-    degree: "MS in Software Systems Design",
-    org: "New Mexico Highlands University",
-    period: "Awarded Spring 2025",
-  },
-  {
-    degree: "BEng in Electrical and Electronic Engineering",
-    org: "Federal University of Technology, Akure",
-    period: "Awarded Fall 2021",
-  },
-];
+import { getIcon } from "../../../utils/icons";
+import { MapPin } from "lucide-react";
 
 export default function Experience() {
   const { theme, isDark } = useTheme();
+  const { content, loading } = useSiteContent();
+  const EXPERIENCE = content?.experience ?? [];
+  const EDUCATION = content?.education ?? [];
+
+  if (loading || EXPERIENCE.length === 0) return null;
 
   return (
     <section id="experience" className="py-32 px-6 scroll-mt-24">
@@ -116,7 +36,7 @@ export default function Experience() {
 
           <div className="space-y-6">
             {EXPERIENCE.map((item, i) => {
-              const Icon = item.icon;
+              const Icon = getIcon(item.icon);
               return (
                 <motion.div key={i} {...stagger(i)} className="relative pl-16">
                   <div
