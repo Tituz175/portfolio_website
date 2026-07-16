@@ -121,10 +121,10 @@ export default function Hero() {
   return (
     <section
       id="hero"
-      className="relative min-h-screen flex flex-col items-center justify-center text-center px-6 pt-24 pb-16 overflow-hidden scroll-mt-24"
+      className="relative min-h-screen flex flex-col items-center text-center px-6 pt-24 pb-10 overflow-hidden scroll-mt-24"
     >
       <HeroBg />
-      <div className="relative z-10 max-w-5xl mx-auto w-full">
+      <div className="relative z-10 max-w-5xl mx-auto w-full flex-1 flex flex-col items-center justify-center">
         {/* Badge */}
         {/* <motion.div
           {...heroAnim(0.1)}
@@ -289,7 +289,7 @@ export default function Hero() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 2.2, duration: 1 }}
-        className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
+        className="relative z-10 flex flex-col items-center gap-2 pt-10"
         style={{ color: theme.textVeryFaint }}
       >
         <span
