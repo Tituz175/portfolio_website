@@ -3,28 +3,17 @@ import useTheme from "../../../hooks/useTheme";
 import SectionLabel from "../layout/SectionLabel";
 import { fadeUp, stagger } from "../../../utils/animation";
 import { accentText } from "../../../utils/color";
-import { GraduationCap, Briefcase, FlaskConical, MapPin } from "lucide-react";
+import { Briefcase, FlaskConical, MapPin } from "lucide-react";
 
 const EXPERIENCE = [
   {
-    title: "MS in Computer Science",
-    org: "New Mexico Highlands University",
-    period: "Expected Fall 2026",
-    location: "Las Vegas, NM",
-    description:
-      "Advanced coursework and research in machine learning systems, high-performance computing, and scalable AI. Applying to PhD programs to continue research in efficient large-scale model training and inference.",
-    tags: ["ML Systems", "HPC", "Research"],
-    icon: GraduationCap,
-    accent: "#4080ff",
-  },
-  {
-    title: "Teaching Assistant",
+    title: "Graduate Research & Teaching Assistant",
     org: "NMHU, Department of Computer Science",
-    period: "Fall 2024 — Present",
+    period: "Jan 2023 — Present",
     location: "Las Vegas, NM",
     description:
-      "Taught and supported courses spanning Java programming, Unix systems, artificial intelligence, and software engineering across six semesters.",
-    tags: ["Teaching", "AI", "Software Engineering"],
+      "Taught and supported courses spanning Java programming, Unix systems, artificial intelligence, and software engineering, while running Git, Linux, and CI/CD training sessions for students. Also designed semantic retrieval pipelines with LangChain and vector databases, and built OpenCV-based computer vision workflows for real-time monitoring applications.",
+    tags: ["Teaching", "RAG", "Computer Vision", "CI/CD"],
     icon: Briefcase,
     accent: "#f59e0b",
   },
@@ -51,26 +40,55 @@ const EXPERIENCE = [
     accent: "#7c5cfc",
   },
   {
-    title: "MS in Software Systems Design",
-    org: "New Mexico Highlands University",
-    period: "Awarded Spring 2025",
+    title: "Software Engineering Assistant",
+    org: "NMHU Police Department",
+    period: "May 2024 — Aug 2024",
     location: "Las Vegas, NM",
     description:
-      "Graduate research spanning AI-powered audio analysis and retrieval-augmented generation systems, including a thesis on an interactive music analyzer for musicians using AI.",
-    tags: ["RAG", "Audio ML", "Thesis"],
-    icon: GraduationCap,
-    accent: "#10b981",
+      "Built an automated certificate-management system in Python, SQL, and Microsoft Access to track expiring compliance records, with monitoring and alerting workflows that cut manual auditing overhead.",
+    tags: ["Python", "SQL", "Automation"],
+    icon: Briefcase,
+    accent: "#06b6d4",
   },
   {
-    title: "BEng in Electrical and Electronic Engineering",
+    title: "Software Engineer Intern",
+    org: "alx_africa",
+    period: "Jan 2023 — Apr 2024",
+    location: "Remote",
+    description:
+      "Designed and shipped scalable RESTful APIs with Flask, Node.js, Express, and SQLAlchemy for multi-user applications, with MySQL and MongoDB data layers and JWT-based auth — improving backend processing efficiency by roughly 30% through API and query optimization.",
+    tags: ["REST APIs", "MySQL/MongoDB", "Auth"],
+    icon: Briefcase,
+    accent: "#4080ff",
+  },
+  {
+    title: "Assistant Software Engineering Instructor",
+    org: "SQI College of ICT",
+    period: "Nov 2021 — Nov 2022",
+    location: "Ibadan, Nigeria",
+    description:
+      "Taught foundational web development (HTML, CSS, JavaScript) and introductory programming, coordinating coding sessions and mentoring students through hands-on project work.",
+    tags: ["Teaching", "Web Fundamentals"],
+    icon: Briefcase,
+    accent: "#f59e0b",
+  },
+];
+
+const EDUCATION = [
+  {
+    degree: "MS in Computer Science",
+    org: "New Mexico Highlands University",
+    period: "Expected Fall 2026",
+  },
+  {
+    degree: "MS in Software Systems Design",
+    org: "New Mexico Highlands University",
+    period: "Awarded Spring 2025",
+  },
+  {
+    degree: "BEng in Electrical and Electronic Engineering",
     org: "Federal University of Technology, Akure",
     period: "Awarded Fall 2021",
-    location: "Akure, Nigeria",
-    description:
-      "Undergraduate research on real-time energy monitoring systems, embedded C programming, and circuit simulation for low-voltage distribution systems.",
-    tags: ["Embedded Systems", "Circuit Design"],
-    icon: GraduationCap,
-    accent: "#ef4444",
   },
 ];
 
@@ -102,10 +120,11 @@ export default function Experience() {
               return (
                 <motion.div key={i} {...stagger(i)} className="relative pl-16">
                   <div
-                    className="absolute left-0 top-0 w-14 h-14 flex items-center justify-center rounded-2xl"
+                    className="absolute left-0 top-0 z-10 w-14 h-14 flex items-center justify-center rounded-2xl"
                     style={{
                       border: `1px solid ${item.accent}25`,
-                      backgroundColor: `${item.accent}08`,
+                      backgroundColor: theme.bg,
+                      backgroundImage: `linear-gradient(${item.accent}14, ${item.accent}14)`,
                     }}
                   >
                     <Icon size={16} style={{ color: item.accent }} />
@@ -192,6 +211,53 @@ export default function Experience() {
             })}
           </div>
         </div>
+
+        <motion.div {...fadeUp} className="mt-14">
+          <p
+            className="uppercase mb-4"
+            style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: "0.7rem",
+              letterSpacing: "0.18em",
+              color: theme.textFaint,
+            }}
+          >
+            Education
+          </p>
+          <div style={{ borderTop: `1px solid ${theme.border}` }}>
+            {EDUCATION.map((edu) => (
+              <div
+                key={edu.degree}
+                className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 py-4"
+                style={{ borderBottom: `1px solid ${theme.border}` }}
+              >
+                <div>
+                  <p
+                    className="font-bold text-base"
+                    style={{
+                      fontFamily: "var(--font-display)",
+                      color: theme.text,
+                    }}
+                  >
+                    {edu.degree}
+                  </p>
+                  <p className="text-sm mt-0.5" style={{ color: theme.textMuted }}>
+                    {edu.org}
+                  </p>
+                </div>
+                <div
+                  className="text-xs whitespace-nowrap"
+                  style={{
+                    fontFamily: "var(--font-mono)",
+                    color: theme.textFaint,
+                  }}
+                >
+                  {edu.period}
+                </div>
+              </div>
+            ))}
+          </div>
+        </motion.div>
       </div>
     </section>
   );
