@@ -79,4 +79,5 @@ const LIGHT: Tok = {
   timelineRail: "linear-gradient(to bottom,rgba(64,128,255,0.45),rgba(0,0,0,0.06) 60%,transparent)",
 };
 
-export { DARK, LIGHT, Tok };
+export { DARK, LIGHT };
+export type { Tok };

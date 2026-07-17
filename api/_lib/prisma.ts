@@ -1,10 +1,8 @@
-import pkg from "@prisma/client";
-import type { PrismaClient as PrismaClientType } from "@prisma/client";
-const { PrismaClient } = pkg;
+import { PrismaClient } from "@prisma/client";
 
 // Reuse a single PrismaClient across warm serverless invocations instead of
 // opening a new connection per request.
-const globalForPrisma = globalThis as unknown as { prisma?: PrismaClientType };
+const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient };
 
 export const prisma = globalForPrisma.prisma ?? new PrismaClient();
 
