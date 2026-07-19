@@ -151,27 +151,57 @@ export default function Navbar({ active }: NavbarProps) {
           <a
             href="#contact"
             onClick={(e) => handleNav(e, "#contact")}
-            className="group flex items-center gap-2 text-sm px-4 py-2 rounded-full"
+            className="group flex items-center gap-2 text-sm px-4 py-2 rounded-full border"
             style={{
               backgroundColor: "transparent",
+              borderColor: theme.border,
               color: theme.textMuted,
-              fontWeight: 400,
-              transition: "background-color 0.3s ease-in-out, color 0.3s ease-in-out, box-shadow 0.3s ease-in-out, font-weight 0.2s ease-in-out",
+              transition: "background-color 0.3s ease-in-out, border-color 0.3s ease-in-out, color 0.3s ease-in-out, box-shadow 0.3s ease-in-out",
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.backgroundColor = "#4080ff";
+              e.currentTarget.style.borderColor = "#4080ff";
               e.currentTarget.style.color = "#ffffff";
-              e.currentTarget.style.fontWeight = "600";
               e.currentTarget.style.boxShadow = "0 0 24px rgba(64,128,255,0.4)";
+              const textEl = e.currentTarget.querySelector<HTMLSpanElement>("[data-cta-text]");
+              if (textEl) {
+                textEl.style.color = "#ffffff";
+                textEl.style.fontWeight = "600";
+              }
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.backgroundColor = "transparent";
+              e.currentTarget.style.borderColor = theme.border;
               e.currentTarget.style.color = theme.textMuted;
-              e.currentTarget.style.fontWeight = "400";
               e.currentTarget.style.boxShadow = "none";
+              const textEl = e.currentTarget.querySelector<HTMLSpanElement>("[data-cta-text]");
+              if (textEl) {
+                textEl.style.color = theme.textMuted;
+                textEl.style.fontWeight = "400";
+              }
             }}
           >
-            Get in touch
+            {/* Invisible bold ghost reserves width up front so the text's
+                weight can animate on hover without resizing the button. */}
+            <span className="relative inline-block">
+              <span
+                aria-hidden="true"
+                className="block whitespace-nowrap font-semibold invisible"
+              >
+                Get in touch
+              </span>
+              <span
+                data-cta-text
+                className="absolute inset-0 whitespace-nowrap"
+                style={{
+                  color: theme.textMuted,
+                  fontWeight: 400,
+                  transition: "color 0.3s ease-in-out, font-weight 0.2s ease-in-out",
+                }}
+              >
+                Get in touch
+              </span>
+            </span>
             <ChevronRight
               size={14}
               className="transition-transform duration-300 group-hover:translate-x-1"
