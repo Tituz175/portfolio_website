@@ -90,20 +90,44 @@ export default function Navbar({ active }: NavbarProps) {
                 key={label}
                 href={href}
                 onClick={(e) => handleNav(e, href)}
-                className="relative text-sm transition-colors duration-200"
-                style={{
-                  color: isActive ? theme.text : theme.textMuted,
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.color = theme.text;
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.color = isActive
-                    ? theme.text
-                    : theme.textMuted;
-                }}
+                className="relative inline-block text-sm"
               >
-                {label}
+                {/* Invisible bold copy reserves the link's width up front, so
+                    the visible text's weight can animate on hover without
+                    pushing neighboring links around. */}
+                <span
+                  aria-hidden="true"
+                  className="block whitespace-nowrap font-bold invisible"
+                >
+                  {label}
+                </span>
+
+                <span
+                  className="absolute inset-0 whitespace-nowrap"
+                  style={{
+                    backgroundImage: `linear-gradient(to right, ${theme.text} 50%, ${theme.textMuted} 50%)`,
+                    backgroundSize: "200% 100%",
+                    backgroundPosition: isActive ? "0% 0" : "100% 0",
+                    WebkitBackgroundClip: "text",
+                    backgroundClip: "text",
+                    color: "transparent",
+                    WebkitTextFillColor: "transparent",
+                    fontWeight: isActive ? 700 : 400,
+                    transition: "background-position 0.35s ease, font-weight 0.2s ease",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundPosition = "0% 0";
+                    e.currentTarget.style.fontWeight = "700";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundPosition = isActive
+                      ? "0% 0"
+                      : "100% 0";
+                    e.currentTarget.style.fontWeight = isActive ? "700" : "400";
+                  }}
+                >
+                  {label}
+                </span>
 
                 {isActive && (
                   <motion.span
