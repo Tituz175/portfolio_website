@@ -12,9 +12,11 @@ import Contact from "../components/sections/Contact";
 import Footer from "../components/layout/Footer";
 
 import useTheme from "../../hooks/useTheme";
+import useSiteContent from "../../hooks/useSiteContent";
 
 export default function App() {
   const { theme } = useTheme();
+  const { loading } = useSiteContent();
 
   // =========================
   // ACTIVE SECTION TRACKING
@@ -57,7 +59,7 @@ export default function App() {
     });
 
     return () => observer.disconnect();
-  }, []);
+  }, [loading]);
 
   // =========================
   // RENDER
