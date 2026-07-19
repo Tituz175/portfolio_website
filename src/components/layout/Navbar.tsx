@@ -151,22 +151,31 @@ export default function Navbar({ active }: NavbarProps) {
           <a
             href="#contact"
             onClick={(e) => handleNav(e, "#contact")}
-            className="flex items-center gap-2 text-sm px-4 py-2 rounded-full border transition-all duration-200"
+            className="group flex items-center gap-2 text-sm px-4 py-2 rounded-full"
             style={{
-              borderColor: theme.border,
+              backgroundColor: "transparent",
               color: theme.textMuted,
+              fontWeight: 400,
+              transition: "background-color 0.3s ease-in-out, color 0.3s ease-in-out, box-shadow 0.3s ease-in-out, font-weight 0.2s ease-in-out",
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = "rgba(64,128,255,0.5)";
-              e.currentTarget.style.color = theme.text;
+              e.currentTarget.style.backgroundColor = "#4080ff";
+              e.currentTarget.style.color = "#ffffff";
+              e.currentTarget.style.fontWeight = "600";
+              e.currentTarget.style.boxShadow = "0 0 24px rgba(64,128,255,0.4)";
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = theme.border;
+              e.currentTarget.style.backgroundColor = "transparent";
               e.currentTarget.style.color = theme.textMuted;
+              e.currentTarget.style.fontWeight = "400";
+              e.currentTarget.style.boxShadow = "none";
             }}
           >
             Get in touch
-            <ChevronRight size={14} />
+            <ChevronRight
+              size={14}
+              className="transition-transform duration-300 group-hover:translate-x-1"
+            />
           </a>
         </div>
 
