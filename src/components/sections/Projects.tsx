@@ -77,7 +77,7 @@ export default function Projects() {
                 >
                   {p.category}
                 </span>
-                <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                <div className="flex items-center gap-1 opacity-100 transition-opacity duration-200 [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:opacity-100">
                   {p.github && (
                     <a
                       href={p.github}
