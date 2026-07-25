@@ -1,5 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import { Analytics } from "@vercel/analytics/react";
 
 import App from "./app/App";
 
@@ -13,6 +14,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     <ThemeProvider>
       <SiteContentProvider>
         <App />
+        <Analytics />
       </SiteContentProvider>
     </ThemeProvider>
   </React.StrictMode>
